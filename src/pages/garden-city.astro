@@ -1,0 +1,778 @@
+---
+import { getCollection } from "astro:content";
+
+// Import the markdown content
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Garden City: Work, Rest & Tech Culture</title>
+    <style>
+      :root {
+        --color-primary: #2c3e50;
+        --color-secondary: #3498db;
+        --color-accent: #e74c3c;
+        --color-text: #333;
+        --color-light: #f5f5f5;
+      }
+
+      html {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--color-light);
+      }
+
+      body {
+        margin: 0;
+        padding: 20px;
+        color: var(--color-text);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: var(--color-primary);
+        border-bottom: 3px solid var(--color-secondary);
+        padding-bottom: 10px;
+        margin-top: 0;
+      }
+
+      h2 {
+        color: var(--color-primary);
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+      }
+
+      h3 {
+        color: var(--color-secondary);
+      }
+
+      a {
+        color: var(--color-secondary);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      em {
+        color: var(--color-accent);
+        font-style: italic;
+      }
+
+      strong {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+
+      ul,
+      ol {
+        margin: 20px 0;
+        padding-left: 30px;
+      }
+
+      li {
+        margin: 10px 0;
+      }
+
+      .key-takeaways {
+        background: #f0f4f8;
+        border-left: 4px solid var(--color-secondary);
+        padding: 20px;
+        margin: 30px 0;
+        border-radius: 4px;
+      }
+
+      .sources {
+        background: #fafafa;
+        padding: 20px;
+        margin-top: 40px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: #666;
+      }
+
+      .sources h3 {
+        margin-top: 0;
+      }
+
+      .sources a {
+        word-break: break-all;
+      }
+
+      blockquote {
+        border-left: 4px solid var(--color-secondary);
+        margin: 20px 0;
+        padding: 15px 20px;
+        background: #f9f9f9;
+        font-style: italic;
+        color: #555;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+        }
+
+        h1 {
+          font-size: 1.8em;
+        }
+
+        h2 {
+          font-size: 1.4em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="_garden-city_-work-rest-tech-culture">
+        <em>Garden City</em>: Work, Rest &amp; Tech Culture
+      </h1>
+      <p>
+        John Mark Comer&#39;s <em>Garden City</em> reframes our 9-to-5 as part of
+        God&#39;s grand story from Eden to the New Creation. Comer takes us <strong
+          >&quot;from creation to the final heavenly city&quot;</strong
+        >, helping readers find their place in God&#39;s plan<a
+          href="https://www.zondervan.com/9780310337317/garden-city/#:~:text=,changing%20ideas"
+          >[1]</a
+        >. In Genesis, humanity is made in God&#39;s image with a mandate to
+        &quot;take all the raw materials…to work it, to take care of it…as an
+        act of service and worship&quot;<a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=,the%20God%20who%20made%20you"
+          >[2]</a
+        >. In other words, even coding or system administration is sacred: our
+        tech work becomes <em>worship</em> when we use it to care for God&#39;s world.
+        The biblical narrative continues through the Fall (which makes work &quot;hard&quot;
+        and frustrating) and climaxes with Christ and the New Jerusalem. In the <em
+          >Garden City</em
+        > vision, the future is not a return to Eden but a forward journey into a
+        &quot;Garden-like world&quot; where we help &quot;cooperate with God in building
+        a civilization&quot; for God&#39;s people to flourish<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=You%E2%80%99ll%20hear%20a%20few%20John,a%20civilization%20where%20his%20people"
+          >[3]</a
+        >. In fact, Becky McKemey notes, in our resurrected lives &quot;our work
+        will be a joy, and not a toil or a burden&quot;<a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=The%20final%20section%20of%20the,life%20forever%2C%20working%20alongside%20Jesus"
+          >[4]</a
+        > - yet that hope also reshapes our work today.
+      </p>
+      <h2 id="your-calling-work-as-god-s-mission">
+        Your Calling: Work as God&#39;s Mission
+      </h2>
+      <p>
+        Comer emphasizes that <strong>every</strong> job matters. Quoting <em
+          >Colossians 3:23-24</em
+        >, one blog notes &quot;whatever you do, work heartily, as for the
+        Lord&quot; - because &quot;all work is holy&quot; by God&#39;s design<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=Colossians%203%3A23,are%20serving%20the%20Lord%20Christ"
+          >[5]</a
+        ><a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=All%20work%20is%20holy%20because,labourers%2C%20%C2%A0zoologists%2C%20explorers%2C%20architects%2C%20designers%E2%80%A6"
+          >[6]</a
+        >. We were not made to pull church and career apart. As a believer, you
+        have a <strong>dual vocation</strong><a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=,calling%20%E2%80%93%20to%20make%20disciples"
+          >[7]</a
+        >: one is your professional role, the other is your life mission. Comer
+        vividly illustrates this for techies: <em
+          >&quot;If you&#39;re the IT guy…you have not one, but two
+          callings&quot;</em
+        ><a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=,get%20to%20invite%20people%20to"
+          >[8]</a
+        >. First, be an excellent IT professional - &quot;make your
+        company&#39;s computer systems sing&quot; as if recreating Eden<a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=,get%20to%20invite%20people%20to"
+          >[8]</a
+        >. Second, be a disciple - let your Christian character naturally raise
+        questions about meaning, hope and joy<a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=again.%20Well%20done.%20,get%20to%20invite%20people%20to"
+          >[9]</a
+        >. In short, your day job <strong>is</strong> part of God&#39;s mission. Comer
+        reminds us we&#39;re &quot;image bearers…created to rule…to cooperate with
+        God in building a civilization where his people can thrive&quot;<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=You%E2%80%99ll%20hear%20a%20few%20John,a%20civilization%20where%20his%20people"
+          >[3]</a
+        >. This means writing code, designing networks or managing data should
+        aim at &quot;draw[ing] out the earth&#39;s potential and unleash it for
+        human flourishing&quot;<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=You%E2%80%99ll%20hear%20a%20few%20John,a%20civilization%20where%20his%20people"
+          >[3]</a
+        >.
+      </p>
+      <p>
+        There is <strong>no sacred-secular divide</strong> in God&#39;s economy. &quot;God
+        doesn&#39;t classify some jobs as holy and some jobs as not holy,&quot; one
+        writer paraphrases Comer: &quot;He&#39;s not into sacred and secular. All
+        work done for God and to God can be holy&quot;<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=for%20all%20the%20accountants%20out,there"
+          >[10]</a
+        >. Whether you&#39;re engineering software, baking servers, or crafting
+        a product launch, you are stewarding God&#39;s creation. In practice,
+        this might mean asking: <em
+          >Does my project benefit the community? Does it make the world more
+          &#39;garden-like&#39;? Does it glorify God?</em
+        > Comer even suggests making these your job litmus tests<a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=1,God%20has%20called%20us%20to"
+          >[11]</a
+        >. As Becky McKemey summarizes, God made each of us unique <strong
+          >&quot;with individual passions and desires, which, when used for the
+          glory of God in our work, bring us profound joy.&quot;</strong
+        ><a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=God%20cares%20about%20what%20we,sole%20motivation%20behind%20our%20work"
+          >[12]</a
+        >. In other words, use your talents (coding skills, design sense,
+        analytical mind) for God&#39;s glory and others&#39; good.
+      </p>
+      <h2 id="identity-image-bearers-not-just-doers">
+        Identity: Image Bearers, Not Just Doers
+      </h2>
+      <p>
+        Tech culture often pressures us to define ourselves by titles or output
+        (&quot;I&#39;m a developer at X.&quot;). <em>Garden City</em> pushes back:
+        your primary identity is <strong
+          >&quot;in God&#39;s image,&quot; not your job</strong
+        ><a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=At%20the%20outset%2C%20he%20takes,we%20are%20created%20to%20be"
+          >[13]</a
+        >. As Comer shows, the lie of our culture is that &quot;what we do
+        defines who we are,&quot; but Scripture says the reverse: who we are
+        (God&#39;s beloved children) gives meaning to what we do<a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=At%20the%20outset%2C%20he%20takes,we%20are%20created%20to%20be"
+          >[13]</a
+        >. Becky notes how easy it is to compare jobs, pay, or status, but <em
+          >Garden City</em
+        > reminds us that our worth comes from our Creator. This frees us from performance-driven
+        anxiety. We follow the example of J.S. Bach, who signed all his music <em
+          >Soli Deo Gloria</em
+        > - &quot;to the glory of God.&quot; Our code, spreadsheets or customer service
+        can carry the same motto.
+      </p>
+      <p>
+        Practically, this means you <strong>live</strong> your faith through excellence
+        and integrity. Pastor Shaun Hays, who works in a secular warehouse, illustrates
+        this: he avoids pushing religion at work (&quot;most do not appreciate… discussions
+        of religion so I avoid it&quot;<a
+          href="https://shaunhays.com/tag/work/#:~:text=It%20is%20well%20known%20in,my%20beliefs%20are%20sincere%2C%20since"
+          >[14]</a
+        >), but he <em>does</em> &quot;go above and beyond the minimum&quot; and &quot;do
+        [his] best all the time&quot; on the job<a
+          href="https://shaunhays.com/tag/work/#:~:text=I%20work%20in%20a%20secular,my%20best%20all%20the%20time"
+          >[15]</a
+        >. His hope is that colleagues will see Christ in his character (&quot;I
+        seek to please my Father… be the first person at work people point to
+        for an example of what is best&quot;<a
+          href="https://shaunhays.com/tag/work/#:~:text=I%20seek%20to%20please%20my,both%20from%20time%20to%20time"
+          >[16]</a
+        >). In short, let <strong>who you are in Christ</strong> guide how you work.
+        This counters the tech-world idol of busyness and success, reminding us &quot;we
+        are valuable… because we are made in the image of God&quot;<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=Work%20becomes%20an%20idol%20when,suffer%20exhaustion%2C%20anxiety%20and%20burnout"
+          >[17]</a
+        >, not by GitHub stars or salary.
+      </p>
+      <h2 id="rest-and-resilience-rediscovering-sabbath">
+        Rest and Resilience: Rediscovering Sabbath
+      </h2>
+      <p>
+        The fast-paced tech world glorifies <em>hustle</em>: coding all-night,
+        jumping from one sprint to the next. Comer and his readers offer a
+        different rhythm: the <strong>Sabbath</strong>. Scripture shows God
+        himself worked six days and &quot;on the seventh day he rested&quot;<a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=God%20knows%20we%20need%20to,bearers%2C%20we%20should%20work%C2%A0and%C2%A0rest%20too"
+          >[18]</a
+        >, setting a pattern for us. <em>Garden City</em> stresses: <em
+          >we are not machines</em
+        >. Burnout is real among tech workers, and Comer warns of its costs:
+        &quot;fatigue, burnout, anxiety, depression… as if God knew what he was
+        saying when he commanded us to rest!&quot;<a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=The%20world%20is%20full%20of,he%20commanded%20us%20to%20rest"
+          >[19]</a
+        >. Rest isn&#39;t a 90-minute nap; it&#39;s a deliberate pause.
+        Onelife&#39;s book club calls Sabbath &quot;more than one day off - a
+        day to enjoy the fruits of our labor, delight in life, and worship&quot;<a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=Sabbath%20rest%20is%20more%20than,his%20world%2C%20we%C2%A0celebrate%C2%A0life%2C%20we%C2%A0rest%C2%A0and%20we%C2%A0worship%C2%A0him"
+          >[20]</a
+        >.
+      </p>
+      <p>
+        This message even finds voice outside Christianity. Documentarian
+        Tiffany Shlain coined the idea of a <strong
+          >&quot;tech Sabbath&quot;</strong
+        >. For over a decade she&#39;s observed one day a week without screens,
+        and during the pandemic she reports it became <em
+          >&quot;ten times more important.&quot;</em
+        > Her children call it <em
+          >&quot;the only thing that hasn&#39;t changed&quot;</em
+        ><a
+          href="https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/#:~:text=saying%2C%20%E2%80%9CFocus%20on%20what%20matters%2C,consistent%20thing%2C%20is%20this%20%E2%80%A6"
+          >[21]</a
+        >. She describes it as &quot;an analog day of joy and family&quot;<a
+          href="https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/#:~:text=Shlain%3A%20%E2%80%A6%20this%20day%20that,of%20one%20day%20of%20rest"
+          >[22]</a
+        > - an oasis of peace in a noisy week. We tech folks could use the same practice:
+        set a rhythm to fully unplug at regular intervals. As Comer reminds us, Sabbath
+        is a <em>signpost</em> between this world and the next. By resting we acknowledge
+        &quot;God is God and we are not&quot;<a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=Besides%20the%20physical%2C%20emotional%20and,God%20and%20we%20are%20not"
+          >[23]</a
+        > - we trust Him rather than our own productivity.
+      </p>
+      <h2 id="living-in-the-kingdom-tech-as-mission-field">
+        Living in the Kingdom: Tech as Mission Field
+      </h2>
+      <p>
+        Every day in the office is also a <strong>missional</strong> opportunity.
+        Jeff Haanen (Translating Faith) points out that when we enter a workplace,
+        <strong
+          >&quot;various &#39;gods&#39; and ultimate purposes are already there,
+          and we are ultimately in a missionary context.&quot;</strong
+        ><a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=organizations%2C%20institutions%2C%20markets%20or%20governments,ultimately%20in%20a%20missionary%20context"
+          >[24]</a
+        >. In plain terms, any company has an unspoken agenda (maximizing
+        profit, innovation idol, consumerism, etc.). As Christians we enter with
+        a Bible worldview. We&#39;re called to <em
+          >&quot;translate the Bible&#39;s story into the secular
+          workplace,&quot;</em
+        > demonstrating that Jesus&#39; Lordship extends beyond church walls<a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=%E2%80%9CThese%20ideas%20are%20fine%2C%E2%80%9D%20I%E2%80%99ve,based%20nonprofits"
+          >[25]</a
+        ><a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=Second%2C%20Christians%20often%20fear%20the,his%20faith%20at%20a%20Christian"
+          >[26]</a
+        >.
+      </p>
+      <p>
+        John Mark Comer invites us to think big: we are building a <strong
+          >Kingdom on earth</strong
+        >. He quotes Lesslie Newbigin to say companies under Christ&#39;s
+        Lordship become the arena of God&#39;s powers (rather than worldly
+        &quot;principalities&quot;)<a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=organizations%2C%20institutions%2C%20markets%20or%20governments,ultimately%20in%20a%20missionary%20context"
+          >[24]</a
+        >. One writer encapsulates Comer&#39;s vision: <em
+          >&quot;We&#39;re called to make a Garden-like world… where God&#39;s
+          will is done &#39;on earth as it is in heaven.&#39;… After all,
+          we&#39;re just supposed to continue what God started in the
+          beginning.&quot;</em
+        ><a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=To%20quote%20John%20Mark%20Comer,%E2%80%9D"
+          >[27]</a
+        >. Put simply, every ethical decision, helpful tool or faithful action
+        in your tech role pushes back darkness and spreads the beauty of
+        God&#39;s Kingdom.
+      </p>
+      <h2 id="faith-at-work-navigating-a-secular-tech-world">
+        Faith at Work: Navigating a Secular Tech World
+      </h2>
+      <p>
+        Tech companies today are rarely &quot;openly religious.&quot; Many fall
+        into Haanen&#39;s <strong>faith-avoidant</strong> or <strong
+          >faith-tolerant</strong
+        > categories<a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=1.%20Faith,to%20accept%20Jesus%20as%20Lord"
+          >[28]</a
+        ><a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=2.%20Faith,into%20the%20work%20or%20company"
+          >[29]</a
+        >. In a faith-avoidant firm, talking about belief is &quot;not
+        appropriate here&quot;<a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=1.%20Faith,to%20accept%20Jesus%20as%20Lord"
+          >[28]</a
+        >; in a faith-tolerant one it&#39;s quietly allowed but never integrated
+        (perhaps only through HR&#39;s diversity programs)<a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=2.%20Faith,into%20the%20work%20or%20company"
+          >[29]</a
+        >. In practice, this means overt evangelism is often unwelcome. Instead,
+        focus on other &quot;callings&quot; - excellence and kindness. <strong
+          >Live your faith softly</strong
+        >. As one tech pastor advises, avoid forced religious talk, but let your
+        work ethic and integrity do the talking<a
+          href="https://shaunhays.com/tag/work/#:~:text=It%20is%20well%20known%20in,my%20beliefs%20are%20sincere%2C%20since"
+          >[14]</a
+        ><a
+          href="https://shaunhays.com/tag/work/#:~:text=I%20seek%20to%20please%20my,both%20from%20time%20to%20time"
+          >[16]</a
+        >.
+      </p>
+      <p>
+        The book of Daniel offers a model: a believer in a pagan workplace,
+        Daniel <em>&quot;refused to worship the CEO&quot;</em> yet performed so well
+        that &quot;Daniel&#39;s religious views were broadcast throughout the corporation&quot;<a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=Should%20you%20find%20yourself%20in,Acts%2017%3A22"
+          >[30]</a
+        >. In other words, he was a faithful witness by refusing obvious
+        compromises (dietary laws, idol worship) while excelling at his
+        assignments. We can do likewise: refuse unethical practices, pray
+        privately, and trust that God can use our integrity as testimony.
+      </p>
+      <h3 id="four-workplace-postures-david-miller-s-framework-">
+        Four Workplace &quot;Postures&quot; (David Miller&#39;s Framework)
+      </h3>
+      <ul>
+        <li>
+          <strong>Faith-Avoiding:</strong> The company actively forbids religious
+          talk. Leaders think &quot;that&#39;s not appropriate here,&quot; and employees
+          fear career consequences<a
+            href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=1.%20Faith,to%20accept%20Jesus%20as%20Lord"
+            >[28]</a
+          >.
+        </li>
+        <li>
+          <strong>Faith-Tolerant:</strong> Religion isn&#39;t banned, but it lives
+          in the margins. Perhaps there&#39;s a prayer room or employee faith group,
+          but church-talk is mostly private and occasional<a
+            href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=1.%20Faith,to%20accept%20Jesus%20as%20Lord"
+            >[28]</a
+          ><a
+            href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=2.%20Faith,into%20the%20work%20or%20company"
+            >[29]</a
+          >.
+        </li>
+        <li>
+          <strong>Faith-Based:</strong> (Rare in big tech) The founders&#39; faith
+          shapes the culture and operations openly.
+        </li>
+        <li>
+          <strong>Faith-Friendly:</strong> A truly open culture where diverse beliefs
+          are welcomed and discussed, though still with professionalism<a
+            href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=2.%20Faith,into%20the%20work%20or%20company"
+            >[29]</a
+          >.
+        </li>
+      </ul>
+      <p>
+        Most large tech firms are faith-avoidant or tolerant. The key is to be
+        wise: if you&#39;re in a faith-avoidant context, focus on good work and
+        discreet witness. If you&#39;re in a more tolerant place, you might even
+        find space for a voluntary lunch Bible study or private prayer. In all
+        cases, remember the mission: you &quot;are serving the Lord Christ&quot;
+        in your work<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=Colossians%203%3A23,are%20serving%20the%20Lord%20Christ"
+          >[5]</a
+        >.
+      </p>
+      <h2 id="-applying-_garden-city_-in-tech-life-">
+        <strong>Applying <em>Garden City</em> in Tech Life</strong>
+      </h2>
+      <p>
+        The ideas of <em>Garden City</em> may seem lofty, but they translate into
+        concrete steps:
+      </p>
+      <ul>
+        <li>
+          <strong>Work Heartily:</strong> Approach every task &quot;as for the Lord,
+          not for men&quot;<a
+            href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=Colossians%203%3A23,are%20serving%20the%20Lord%20Christ"
+            >[5]</a
+          >. Write clean code, meet deadlines, and serve users not just to
+          impress bosses but to honor God. Remember Colossians&#39; call to
+          serve Christ in all we do.
+        </li>
+        <li>
+          <strong>Envision Impact:</strong> Regularly ask Comer&#39;s questions<a
+            href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=1,God%20has%20called%20us%20to"
+            >[11]</a
+          >: <em
+            >Does my work help others flourish and make creation more
+            &quot;garden-like&quot;? Does it glorify God? Am I living out my
+            calling?</em
+          > These guideposts keep your projects kingdom-centered.
+        </li>
+        <li>
+          <strong>Rest Intentionally:</strong> Institute a <strong
+            >tech Sabbath</strong
+          >. Even one screen-free day per week (Friday night to Saturday night,
+          or another day) can radically recalibrate life<a
+            href="https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/#:~:text=saying%2C%20%E2%80%9CFocus%20on%20what%20matters%2C,consistent%20thing%2C%20is%20this%20%E2%80%A6"
+            >[21]</a
+          >. Use it to recharge, pray, and enjoy family or creation.
+        </li>
+        <li>
+          <strong>Live Out Faith in Character:</strong> You may not quote Scripture
+          in Slack channels, but you can &quot;be the person at work people point
+          to for an example of what is best&quot;<a
+            href="https://shaunhays.com/tag/work/#:~:text=I%20seek%20to%20please%20my,both%20from%20time%20to%20time"
+            >[16]</a
+          >. Show love to colleagues, admit mistakes, pray quietly in tough
+          moments, and be consistent. Let others see that you value people above
+          profit.
+        </li>
+        <li>
+          <strong>Engage Culture Creatively:</strong> Look for ways technology can
+          serve God&#39;s values: build inclusive software, use platforms for justice,
+          or volunteer your skills for good causes. Remember Newbigin&#39;s idea:
+          <em>imagine</em> how your industry could be redeemed<a
+            href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=Ask%20yourself%3A%20What%E2%80%99s%20good%20about,do%20about%20it%20right%20now"
+            >[31]</a
+          > (e.g. ask &quot;What if all this tech-enabled communication was used to
+          build community instead of just distraction?&quot;).
+        </li>
+        <li>
+          <strong>Keep Eternity in View:</strong>
+          <em>Garden City</em> reminds us our work matters now <strong
+            >and forever</strong
+          ><a
+            href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=The%20final%20section%20of%20the,life%20forever%2C%20working%20alongside%20Jesus"
+            >[4]</a
+          >. This liberates us from fear and success-addiction: we work because
+          God is glorified, not merely to climb a corporate ladder. As Comer
+          puts it, Sabbath and our tech efforts both say &quot;God is God and we
+          are not&quot;<a
+            href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=Besides%20the%20physical%2C%20emotional%20and,God%20and%20we%20are%20not"
+            >[23]</a
+          >, allowing us to trust His timing.
+        </li>
+      </ul>
+      <p>
+        In sum, <em>Garden City</em> paints a compelling vision: your tech job is
+        <em>God&#39;s job</em>. By embracing a biblical view of work, rest and
+        purpose, you can thrive spiritually in a secular setting. You&#39;ll
+        gain a healthier perspective on work-life balance, and you&#39;ll find
+        that code, chips and servers can all be part of God&#39;s much bigger
+        garden. As Skye Jethani observes, Comer&#39;s book lets us see &quot;our
+        work and our world with new eyes&quot;<a
+          href="https://www.zondervan.com/9780310337317/garden-city/#:~:text=that%20God%E2%80%99s%20mission%20includes%20all,com"
+          >[32]</a
+        > - whether we&#39;re at a desk or on a deployment, we&#39;re building Heaven&#39;s
+        city, one task at a time.
+      </p>
+      <p>
+        <strong>Key Takeaways for Techies:</strong> Every assignment is part of God&#39;s
+        mission<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=You%E2%80%99ll%20hear%20a%20few%20John,a%20civilization%20where%20his%20people"
+          >[3]</a
+        >. Excel in your craft as worship<a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=Colossians%203%3A23,are%20serving%20the%20Lord%20Christ"
+          >[5]</a
+        >, rest as God commands<a
+          href="https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/#:~:text=saying%2C%20%E2%80%9CFocus%20on%20what%20matters%2C,consistent%20thing%2C%20is%20this%20%E2%80%A6"
+          >[21]</a
+        >, and let your innovation and love testify to a better Kingdom.
+      </p>
+      <p>
+        <strong>Sources:</strong> Ideas drawn from John Mark Comer&#39;s <em
+          >Garden City</em
+        > and related faith-at-work resources<a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=,the%20God%20who%20made%20you"
+          >[2]</a
+        ><a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=God%20knows%20we%20need%20to,bearers%2C%20we%20should%20work%C2%A0and%C2%A0rest%20too"
+          >[18]</a
+        ><a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=1,God%20has%20called%20us%20to"
+          >[11]</a
+        ><a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=All%20work%20is%20holy%20because,labourers%2C%20%C2%A0zoologists%2C%20explorers%2C%20architects%2C%20designers%E2%80%A6"
+          >[6]</a
+        ><a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=1.%20Faith,to%20accept%20Jesus%20as%20Lord"
+          >[28]</a
+        ><a
+          href="https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/#:~:text=saying%2C%20%E2%80%9CFocus%20on%20what%20matters%2C,consistent%20thing%2C%20is%20this%20%E2%80%A6"
+          >[21]</a
+        >.
+      </p>
+      <p>
+        <a
+          href="https://www.zondervan.com/9780310337317/garden-city/#:~:text=,changing%20ideas"
+          >[1]</a
+        >
+        <a
+          href="https://www.zondervan.com/9780310337317/garden-city/#:~:text=that%20God%E2%80%99s%20mission%20includes%20all,com"
+          >[32]</a
+        > Garden City
+      </p>
+      <p>
+        <a href="https://www.zondervan.com/9780310337317/garden-city/"
+          >https://www.zondervan.com/9780310337317/garden-city/</a
+        >
+      </p>
+      <p>
+        <a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=,the%20God%20who%20made%20you"
+          >[2]</a
+        >
+        <a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=,calling%20%E2%80%93%20to%20make%20disciples"
+          >[7]</a
+        >
+        <a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=,get%20to%20invite%20people%20to"
+          >[8]</a
+        >
+        <a
+          href="https://navmissionalenterprise.org/garden-city/#:~:text=again.%20Well%20done.%20,get%20to%20invite%20people%20to"
+          >[9]</a
+        > Garden City - Navigators
+      </p>
+      <p>
+        <a href="https://navmissionalenterprise.org/garden-city/"
+          >https://navmissionalenterprise.org/garden-city/</a
+        >
+      </p>
+      <p>
+        <a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=You%E2%80%99ll%20hear%20a%20few%20John,a%20civilization%20where%20his%20people"
+          >[3]</a
+        >
+        <a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=Colossians%203%3A23,are%20serving%20the%20Lord%20Christ"
+          >[5]</a
+        >
+        <a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=All%20work%20is%20holy%20because,labourers%2C%20%C2%A0zoologists%2C%20explorers%2C%20architects%2C%20designers%E2%80%A6"
+          >[6]</a
+        >
+        <a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=for%20all%20the%20accountants%20out,there"
+          >[10]</a
+        >
+        <a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=Work%20becomes%20an%20idol%20when,suffer%20exhaustion%2C%20anxiety%20and%20burnout"
+          >[17]</a
+        >
+        <a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/#:~:text=To%20quote%20John%20Mark%20Comer,%E2%80%9D"
+          >[27]</a
+        > Made To Work | One Passion One Devotion
+      </p>
+      <p>
+        <a
+          href="https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/"
+          >https://onepassiononedevotion.wordpress.com/2024/11/19/made-to-work/</a
+        >
+      </p>
+      <p>
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=The%20final%20section%20of%20the,life%20forever%2C%20working%20alongside%20Jesus"
+          >[4]</a
+        >
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=1,God%20has%20called%20us%20to"
+          >[11]</a
+        >
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=God%20cares%20about%20what%20we,sole%20motivation%20behind%20our%20work"
+          >[12]</a
+        >
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=At%20the%20outset%2C%20he%20takes,we%20are%20created%20to%20be"
+          >[13]</a
+        >
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=God%20knows%20we%20need%20to,bearers%2C%20we%20should%20work%C2%A0and%C2%A0rest%20too"
+          >[18]</a
+        >
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=The%20world%20is%20full%20of,he%20commanded%20us%20to%20rest"
+          >[19]</a
+        >
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=Sabbath%20rest%20is%20more%20than,his%20world%2C%20we%C2%A0celebrate%C2%A0life%2C%20we%C2%A0rest%C2%A0and%20we%C2%A0worship%C2%A0him"
+          >[20]</a
+        >
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review#:~:text=Besides%20the%20physical%2C%20emotional%20and,God%20and%20we%20are%20not"
+          >[23]</a
+        > Young Adults Book Club: Garden City Review - Onelife
+      </p>
+      <p>
+        <a
+          href="https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review"
+          >https://onelifeleaders.com/blog/young-adults-book-club-garden-city-review</a
+        >
+      </p>
+      <p>
+        <a
+          href="https://shaunhays.com/tag/work/#:~:text=It%20is%20well%20known%20in,my%20beliefs%20are%20sincere%2C%20since"
+          >[14]</a
+        >
+        <a
+          href="https://shaunhays.com/tag/work/#:~:text=I%20work%20in%20a%20secular,my%20best%20all%20the%20time"
+          >[15]</a
+        >
+        <a
+          href="https://shaunhays.com/tag/work/#:~:text=I%20seek%20to%20please%20my,both%20from%20time%20to%20time"
+          >[16]</a
+        > work « Pastor &quot;Papa&quot; Shaun A. Hays - Senior Pastor/Missions Coordinator
+      </p>
+      <p>
+        <a href="https://shaunhays.com/tag/work/"
+          >https://shaunhays.com/tag/work/</a
+        >
+      </p>
+      <p>
+        <a
+          href="https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/#:~:text=saying%2C%20%E2%80%9CFocus%20on%20what%20matters%2C,consistent%20thing%2C%20is%20this%20%E2%80%A6"
+          >[21]</a
+        >
+        <a
+          href="https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/#:~:text=Shlain%3A%20%E2%80%A6%20this%20day%20that,of%20one%20day%20of%20rest"
+          >[22]</a
+        > Living the Questions - We&#39;ve been enmeshed with our technologies. Tech
+        Shabbat for everyone? | The On Being Project
+      </p>
+      <p>
+        <a
+          href="https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/"
+          >https://onbeing.org/programs/living-the-questions-weve-been-enmeshed-with-our-technologies-tech-shabbat-for-everyone/</a
+        >
+      </p>
+      <p>
+        <a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=organizations%2C%20institutions%2C%20markets%20or%20governments,ultimately%20in%20a%20missionary%20context"
+          >[24]</a
+        >
+        <a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=%E2%80%9CThese%20ideas%20are%20fine%2C%E2%80%9D%20I%E2%80%99ve,based%20nonprofits"
+          >[25]</a
+        >
+        <a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=Second%2C%20Christians%20often%20fear%20the,his%20faith%20at%20a%20Christian"
+          >[26]</a
+        >
+        <a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=1.%20Faith,to%20accept%20Jesus%20as%20Lord"
+          >[28]</a
+        >
+        <a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=2.%20Faith,into%20the%20work%20or%20company"
+          >[29]</a
+        >
+        <a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=Should%20you%20find%20yourself%20in,Acts%2017%3A22"
+          >[30]</a
+        >
+        <a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/#:~:text=Ask%20yourself%3A%20What%E2%80%99s%20good%20about,do%20about%20it%20right%20now"
+          >[31]</a
+        > Translating Your Christian Convictions for a Secular Workplace - Jeff Haanen
+      </p>
+      <p>
+        <a
+          href="https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/"
+          >https://jeffhaanen.com/translating-your-christian-convictions-for-a-secular-workplace/</a
+        >
+      </p>
+    </div>
+  </body>
+</html>
