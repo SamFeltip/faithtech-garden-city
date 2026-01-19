@@ -123,8 +123,9 @@ import { getCollection } from "astro:content";
         overflow-y: auto; 
         pointer-events: auto;
         
-        /* Smooth scrolling */
+        /* Smooth scrolling and chaining */
         -webkit-overflow-scrolling: touch; 
+        overscroll-behavior: auto; /* Ensure scroll chain to window works */
       }
 
       .slide-content:first-child {
@@ -134,9 +135,12 @@ import { getCollection } from "astro:content";
       @media (min-width: 1024px) {
         .slide-content {
           padding: 6rem;
-          justify-content: center; /* Center vertically on desktop */
-          padding-top: 6rem;
-          overflow-y: visible; /* Desktop usually fits, but auto is safer */
+          /* FIX: Use flex-start and fixed top padding for constant positioning */
+          justify-content: flex-start; 
+          padding-top: 20vh;
+          
+          /* Desktop usually fits, but auto is safer */
+          overflow-y: visible; 
         }
       }
 
@@ -186,7 +190,7 @@ import { getCollection } from "astro:content";
 
       .text-body {
         margin-top: 0.5rem;
-        padding-bottom: 3rem; /* Extra space at bottom for scroll */
+        padding-bottom: 5rem; /* Extra space at bottom for scroll chaining */
       }
 
       p {
