@@ -40,7 +40,7 @@ import { getCollection } from "astro:content";
         overflow: hidden;
       }
 
-      /* Visuals */
+      /* Visuals - Always Full Screen Background */
       #visuals-container {
         position: absolute;
         top: 0;
@@ -63,7 +63,6 @@ import { getCollection } from "astro:content";
       .slide-visual:first-child { opacity: 1; }
 
       /* Full Page Backdrop Layer */
-      /* Starts transparent-ish, becomes dark in Body Phase */
       #backdrop-layer {
         position: absolute;
         top: 0;
@@ -71,7 +70,7 @@ import { getCollection } from "astro:content";
         width: 100%;
         height: 100%;
         background-color: var(--color-bg);
-        opacity: 0.3; /* Default Desktop state */
+        opacity: 0.4;
         z-index: 1;
         pointer-events: none;
       }
@@ -87,7 +86,8 @@ import { getCollection } from "astro:content";
         z-index: 5;
       }
 
-      /* Header Wrapper */
+      /* Header Wrapper (Title/Quote) */
+      /* RESTORED: Left Alignment */
       .header-wrapper {
         position: absolute;
         top: 50vh; 
@@ -96,12 +96,17 @@ import { getCollection } from "astro:content";
         padding: 2rem;
         z-index: 10;
         text-shadow: 0 2px 20px rgba(0,0,0,0.8);
-        /* Ensure origin for scaling is handled in JS or center */
-        transform-origin: center top; 
         display: flex;
         flex-direction: column;
-        align-items: center;
-        text-align: center;
+        align-items: flex-start;
+        text-align: left;
+        transform-origin: left top;
+      }
+      
+      @media (min-width: 1024px) {
+        .header-wrapper {
+            padding: 4rem 6rem;
+        }
       }
 
       /* Body Text Wrapper */
@@ -113,13 +118,17 @@ import { getCollection } from "astro:content";
         padding: 2rem;
         opacity: 0;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start; /* Aligned to left like the title */
       }
       
-      /* Inner text container */
       .text-inner {
           max-width: 700px;
-          /* Removed background/shadow as requested */
+      }
+
+      @media (min-width: 1024px) {
+        .text-body {
+            padding: 0 6rem;
+        }
       }
 
       /* Typography */
@@ -151,7 +160,7 @@ import { getCollection } from "astro:content";
       blockquote {
         border-left: 4px solid var(--color-accent-2);
         padding-left: 1rem;
-        margin: 0 auto; /* Center */
+        margin: 0;
         font-style: italic;
         color: var(--color-soft);
         font-size: 1.2rem;
@@ -161,15 +170,15 @@ import { getCollection } from "astro:content";
 
       p {
         line-height: 1.8;
-        margin-bottom: 1rem;
+        margin-bottom: 1.2rem;
         color: var(--color-text);
         font-size: 1.1rem;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.5); /* Readability without box */
+        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
       }
 
       ul {
         margin-left: 1.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.2rem;
         color: var(--color-soft);
       }
       
@@ -198,7 +207,6 @@ import { getCollection } from "astro:content";
         <img src="https://picsum.photos/seed/code/1600/1200" class="slide-visual" alt="Applying" />
       </div>
 
-      <!-- Shared Backdrop for Body Phase -->
       <div id="backdrop-layer"></div>
 
       <div id="content-container">
@@ -385,8 +393,6 @@ import { getCollection } from "astro:content";
         }
       });
 
-      // Initialize Backdrop
-      // Desktop: 0.3. Mobile: 0.8? Or just standard 0.4 start.
       gsap.set(backdrop, { opacity: 0.4 });
 
       const tl = gsap.timeline({
@@ -414,18 +420,23 @@ import { getCollection } from "astro:content";
         // --- PHASE 1: ENTER READING MODE ---
         const p1 = gsap.timeline();
         
-        // Backdrop Darkens (Full Page)
         p1.to(backdrop, { opacity: 0.9, duration: 2, ease: "power1.inOut" }, 0);
 
-        // Header Moves to Top (Closer: 2vh) & Scales Smaller (0.6)
+        // Header moves to top (2vh) and scales down (0.6)
         p1.to(header, { top: "2vh", duration: 2, ease: "power2.inOut" }, 0);
         p1.to(title, { scale: 0.6, duration: 2 }, 0);
         
-        // Quote Fades Out
+        // Quote fades out
         p1.to(quote, { autoAlpha: 0, height: 0, margin: 0, duration: 2 }, 0);
 
-        // Body Enters to Center
-        p1.to(body, { top: "25vh", opacity: 1, duration: 2, ease: "power2.out" }, 0.5);
+        // FIX: Centering logic - use top: 50% and yPercent: -50 to keep center in center
+        p1.to(body, { 
+            top: "50%", 
+            yPercent: -50, 
+            opacity: 1, 
+            duration: 2, 
+            ease: "power2.out" 
+        }, 0.5);
 
         tl.add(p1);
 
@@ -443,9 +454,9 @@ import { getCollection } from "astro:content";
             }, 0);
         }
 
-        // Scroll Body Up slightly
+        // Slight scroll effect while staying mostly centered
         p2.to(body, {
-            top: "-15vh", 
+            yPercent: -60, // Slight nudge up to reveal bottom
             duration: 5,
             ease: "none"
         }, 0);
@@ -457,14 +468,10 @@ import { getCollection } from "astro:content";
         if (nextSlide) {
             const p3 = gsap.timeline();
             
-            // Backdrop Lightens for Next Intro
             p3.to(backdrop, { opacity: 0.4, duration: 2 }, 0);
-
-            // Current Elements Exit
             p3.to(slide, { opacity: 0, duration: 2 }, 0);
             p3.to(visual, { opacity: 0, duration: 2 }, 0);
 
-            // Next Slide Enters
             p3.set(nextSlide, { zIndex: 10, opacity: 1 }, 0); 
             p3.to(nextVisual, { opacity: 1, duration: 2 }, 0);
             
