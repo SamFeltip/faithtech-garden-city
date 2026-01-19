@@ -36,25 +36,28 @@ import { getCollection } from "astro:content";
 
       .scrolly-container {
         width: 100%;
+        position: relative;
       }
 
       section {
-        min-height: 100vh;
+        height: 100vh;
         width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 4rem 2rem;
+        padding: 0;
         position: relative;
         overflow: hidden;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        /* Ensure sections stack cleanly */
+        z-index: 1; 
       }
 
+      /* Desktop Layout: Side by Side */
       @media (min-width: 1024px) {
         section {
           flex-direction: row;
-          padding: 0;
         }
 
         section:nth-child(even) {
@@ -67,32 +70,26 @@ import { getCollection } from "astro:content";
         padding: 2rem;
         z-index: 2;
         max-width: 800px;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        /* Position relative for elements inside */
+        position: relative;
       }
 
       @media (min-width: 1024px) {
         .content-wrapper {
           padding: 6rem;
-          min-height: 100vh;
         }
       }
 
       .visual-wrapper {
         flex: 1;
         width: 100%;
-        height: 50vh;
+        height: 100%; /* Full height for the image container */
         position: relative;
         overflow: hidden;
-      }
-
-      @media (min-width: 1024px) {
-        .visual-wrapper {
-          height: 100vh;
-          position: sticky;
-          top: 0;
-        }
       }
 
       .visual-image {
@@ -100,7 +97,6 @@ import { getCollection } from "astro:content";
         height: 100%;
         object-fit: cover;
         opacity: 0.8;
-        transition: transform 1s ease;
       }
 
       .section-name {
@@ -164,14 +160,27 @@ import { getCollection } from "astro:content";
       li {
         margin-bottom: 0.5rem;
         line-height: 1.6;
+        color: var(--color-soft); /* Lists distinctive */
       }
 
-      .gsap-reveal {
+      /* Animation Helpers */
+      .gsap-header {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
       }
 
-      /* Overlay for better text readability on mobile if needed, though split layout handles this */
+      /* Word Highlighting Styles */
+      .word {
+        opacity: 0.2;
+        color: var(--color-accent-1);
+        transition: opacity 0.1s, color 0.1s;
+      }
+      
+      .word.highlighted {
+        opacity: 1;
+        color: var(--color-text);
+      }
+
       .visual-overlay {
         position: absolute;
         top: 0;
@@ -188,12 +197,12 @@ import { getCollection } from "astro:content";
       <!-- Intro Section -->
       <section id="intro">
         <div class="content-wrapper">
-          <span class="section-name gsap-reveal">Introduction</span>
-          <h1 class="gsap-reveal">Garden City: Work, Rest & Tech Culture</h1>
-          <blockquote class="gsap-reveal">
+          <span class="section-name gsap-header">Introduction</span>
+          <h1 class="gsap-header">Garden City: Work, Rest & Tech Culture</h1>
+          <blockquote class="gsap-header">
             "From creation to the final heavenly city"
           </blockquote>
-          <div class="text-content gsap-reveal">
+          <div class="text-content">
             <p>
               John Mark Comer's <em>Garden City</em> reframes our 9-to-5 as part of
               God's grand story. It helps us find our place in the divine plan, moving
@@ -225,12 +234,12 @@ import { getCollection } from "astro:content";
       <!-- Section 1 -->
       <section id="calling">
         <div class="content-wrapper">
-          <span class="section-name gsap-reveal">Part I</span>
-          <h2 class="gsap-reveal">Your Calling: Work as God's Mission</h2>
-          <blockquote class="gsap-reveal">
+          <span class="section-name gsap-header">Part I</span>
+          <h2 class="gsap-header">Your Calling: Work as God's Mission</h2>
+          <blockquote class="gsap-header">
             "Whatever you do, work heartily, as for the Lord"
           </blockquote>
-          <div class="text-content gsap-reveal">
+          <div class="text-content">
             <p>
               Comer emphasizes that <strong>every</strong> job matters. "All work
               is holy" by God's design. We were not made to pull church and career
@@ -270,12 +279,12 @@ import { getCollection } from "astro:content";
       <!-- Section 2 -->
       <section id="identity">
         <div class="content-wrapper">
-          <span class="section-name gsap-reveal">Part II</span>
-          <h2 class="gsap-reveal">Identity: Image Bearers, Not Just Doers</h2>
-          <blockquote class="gsap-reveal">
+          <span class="section-name gsap-header">Part II</span>
+          <h2 class="gsap-header">Identity: Image Bearers, Not Just Doers</h2>
+          <blockquote class="gsap-header">
             "In God's image," not your job
           </blockquote>
-          <div class="text-content gsap-reveal">
+          <div class="text-content">
             <p>
               Tech culture often defines us by titles or output ("I'm a
               developer at X").
@@ -308,10 +317,10 @@ import { getCollection } from "astro:content";
       <!-- Section 3 -->
       <section id="rest">
         <div class="content-wrapper">
-          <span class="section-name gsap-reveal">Part III</span>
-          <h2 class="gsap-reveal">Rest & Resilience: Rediscovering Sabbath</h2>
-          <blockquote class="gsap-reveal">"We are not machines"</blockquote>
-          <div class="text-content gsap-reveal">
+          <span class="section-name gsap-header">Part III</span>
+          <h2 class="gsap-header">Rest & Resilience: Rediscovering Sabbath</h2>
+          <blockquote class="gsap-header">"We are not machines"</blockquote>
+          <div class="text-content">
             <p>
               The tech world glorifies hustle. But God worked six days and "on
               the seventh day he rested."
@@ -341,12 +350,12 @@ import { getCollection } from "astro:content";
       <!-- Section 4 -->
       <section id="kingdom">
         <div class="content-wrapper">
-          <span class="section-name gsap-reveal">Part IV</span>
-          <h2 class="gsap-reveal">Living in the Kingdom</h2>
-          <blockquote class="gsap-reveal">
+          <span class="section-name gsap-header">Part IV</span>
+          <h2 class="gsap-header">Living in the Kingdom</h2>
+          <blockquote class="gsap-header">
             "Building a Kingdom on earth"
           </blockquote>
-          <div class="text-content gsap-reveal">
+          <div class="text-content">
             <p>
               Every office is a <strong>missional</strong> context. Companies often
               have unspoken agendas (profit, consumerism). We enter with a Kingdom
@@ -375,10 +384,10 @@ import { getCollection } from "astro:content";
       <!-- Section 5 -->
       <section id="faith">
         <div class="content-wrapper">
-          <span class="section-name gsap-reveal">Part V</span>
-          <h2 class="gsap-reveal">Faith at Work</h2>
-          <blockquote class="gsap-reveal">"Live your faith softly"</blockquote>
-          <div class="text-content gsap-reveal">
+          <span class="section-name gsap-header">Part V</span>
+          <h2 class="gsap-header">Faith at Work</h2>
+          <blockquote class="gsap-header">"Live your faith softly"</blockquote>
+          <div class="text-content">
             <p>
               In secular tech firms, overt evangelism is often unwelcome.
               Instead, focus on excellence and kindness. Let your work ethic and
@@ -408,12 +417,12 @@ import { getCollection } from "astro:content";
       <!-- Section 6 -->
       <section id="applying">
         <div class="content-wrapper">
-          <span class="section-name gsap-reveal">Part VI</span>
-          <h2 class="gsap-reveal">Applying Garden City</h2>
-          <blockquote class="gsap-reveal">
+          <span class="section-name gsap-header">Part VI</span>
+          <h2 class="gsap-header">Applying Garden City</h2>
+          <blockquote class="gsap-header">
             "Your tech job is God's job"
           </blockquote>
-          <div class="text-content gsap-reveal">
+          <div class="text-content">
             <p>
               <strong>Concrete steps for techies:</strong>
             </p>
@@ -461,47 +470,112 @@ import { getCollection } from "astro:content";
 
       const sections = document.querySelectorAll("section");
 
-      sections.forEach((section) => {
-        // Animate text content
-        const texts = section.querySelectorAll(".gsap-reveal");
+      sections.forEach((section, index) => {
+        // 1. Text Splitting for Word Highlight
+        const paragraphs = section.querySelectorAll(".text-content p");
+        paragraphs.forEach((p) => {
+          // Wrap words in span.word
+          // Preserve basic HTML inside like <em> or <strong> is tricky with simple split.
+          // But looking at content, it has <em> and <strong>. 
+          // Simple textContent split destroys tags.
+          // We need a smarter split or just accept text node splitting.
+          // For simplicity and safety with existing HTML, let's just animate the paragraphs 
+          // if we can't safely split.
+          // BUT the user specifically asked for "Word Highlighting".
+          // I'll implement a recursive text node splitter to be safe.
+          
+          function wrapWords(node) {
+            if (node.nodeType === 3) { // Text node
+               const text = node.nodeValue;
+               // Skip empty text nodes
+               if(!text.trim()) return;
+               
+               const words = text.split(" ");
+               const frag = document.createDocumentFragment();
+               words.forEach((word, i) => {
+                   if(word === "") return;
+                   const span = document.createElement("span");
+                   span.className = "word";
+                   span.textContent = word + (i < words.length - 1 ? " " : "");
+                   frag.appendChild(span);
+               });
+               if(frag.childNodes.length > 0) {
+                   node.parentNode.replaceChild(frag, node);
+               }
+            } else if (node.nodeType === 1) { // Element node
+                Array.from(node.childNodes).forEach(wrapWords);
+            }
+          }
+          
+          wrapWords(p);
+        });
 
-        gsap.fromTo(
-          texts,
-          {
-            y: 50,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.2,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 60%", // Animation starts when top of section hits 60% of viewport
-              toggleActions: "play none none reverse",
-            },
-          },
-        );
-
-        // Animate Image Parallax/Scale
+        const words = section.querySelectorAll(".word");
+        const headers = section.querySelectorAll(".gsap-header");
         const image = section.querySelector(".visual-image");
-        if (image) {
-          gsap.fromTo(
-            image,
-            { scale: 1.1 },
-            {
-              scale: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: section,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: true,
-              },
-            },
-          );
+        const lists = section.querySelectorAll("ul");
+
+        // 2. Create Timeline
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            pin: true, 
+            start: "top top",
+            end: "+=200%", // 200% screen height scroll distance
+            scrub: 0.5,
+          }
+        });
+
+        // 3. Animation Sequence
+        
+        // A. Header reveal (happens quickly at start of pin)
+        if(headers.length > 0) {
+            tl.to(headers, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5, 
+                stagger: 0.1,
+                ease: "power2.out"
+            });
+        }
+
+        // B. Word Highlighting (takes up most of the scroll)
+        if(words.length > 0) {
+             tl.to(words, {
+                 opacity: 1,
+                 color: "var(--color-text)",
+                 stagger: {
+                     each: 0.05,
+                     from: "start"
+                 },
+                 ease: "none" // Linear highlight matching scroll
+             }, "<0.2"); // Overlap slightly with header
+        }
+        
+        // C. Lists Fade In (if any)
+        if(lists.length > 0) {
+            tl.fromTo(lists, 
+                { opacity: 0 },
+                { opacity: 1, duration: 0.5 },
+                ">" // After words
+            );
+        }
+
+        // D. Image Animation (Parallax/Scale during the whole pin)
+        if(image) {
+            gsap.fromTo(image, 
+                { scale: 1.1, opacity: 0.6 },
+                { 
+                    scale: 1, 
+                    opacity: 1, 
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top top",
+                        end: "+=200%", // Match pin duration
+                        scrub: true
+                    }
+                }
+            );
         }
       });
     </script>
