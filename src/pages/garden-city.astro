@@ -31,7 +31,6 @@ import { getCollection } from "astro:content";
         background-color: var(--color-bg);
         color: var(--color-text);
         font-family: "Inter", sans-serif;
-        /* overflow: hidden;  <-- REMOVED to allow scrolling */
       }
 
       /* Main container that will be pinned */
@@ -48,7 +47,7 @@ import { getCollection } from "astro:content";
         top: 0;
         right: 0;
         width: 100%;
-        height: 50vh; /* Mobile height */
+        height: 30vh; /* REDUCED MOBILE HEIGHT */
         z-index: 1;
       }
 
@@ -79,19 +78,22 @@ import { getCollection } from "astro:content";
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(to bottom, transparent, var(--color-bg));
-        opacity: 0.3;
+        /* Darker backdrop on mobile for better text contrast if overlap occurs */
+        background: linear-gradient(to bottom, rgba(26,32,35,0.2), var(--color-bg));
+        opacity: 0.8; /* Increased opacity */
         z-index: 2;
       }
 
       /* Content Container */
       #content-container {
         position: absolute;
-        top: 50vh; /* Below image on mobile */
+        top: 30vh; /* Matches visual height */
         left: 0;
         width: 100%;
-        height: 50vh;
+        height: 70vh; /* Remaining space */
         z-index: 2;
+        /* Ensure background is solid to prevent visual bleed */
+        background-color: var(--color-bg); 
       }
 
       @media (min-width: 1024px) {
@@ -99,6 +101,7 @@ import { getCollection } from "astro:content";
           top: 0;
           width: 50%;
           height: 100vh;
+          background-color: transparent; /* Transparent on desktop */
         }
       }
 
@@ -109,22 +112,31 @@ import { getCollection } from "astro:content";
         left: 0;
         width: 100%;
         height: 100%;
-        padding: 2rem;
+        padding: 1.5rem; /* Reduced padding for mobile */
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start; /* Start from top to avoid centering overlapping top edge */
+        padding-top: 2rem;
         opacity: 0; /* Default hidden */
-        /* pointer-events: none; Prevent interaction with hidden slides */
+        
+        /* Enable scrolling within the slide if text is long */
+        overflow-y: auto; 
+        pointer-events: auto;
+        
+        /* Smooth scrolling */
+        -webkit-overflow-scrolling: touch; 
       }
 
       .slide-content:first-child {
         opacity: 1;
-        /* pointer-events: auto; */
       }
 
       @media (min-width: 1024px) {
         .slide-content {
           padding: 6rem;
+          justify-content: center; /* Center vertically on desktop */
+          padding-top: 6rem;
+          overflow-y: visible; /* Desktop usually fits, but auto is safer */
         }
       }
 
@@ -133,8 +145,8 @@ import { getCollection } from "astro:content";
         color: var(--color-accent-2);
         text-transform: uppercase;
         letter-spacing: 0.2em;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
         font-weight: 600;
         display: block;
       }
@@ -142,30 +154,39 @@ import { getCollection } from "astro:content";
       h1, h2 {
         font-family: "Playfair Display", serif;
         color: var(--color-highlight);
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         line-height: 1.1;
       }
 
-      h1 { font-size: 2.5rem; }
-      h2 { font-size: 2rem; }
+      h1 { font-size: 2rem; }
+      h2 { font-size: 1.75rem; }
 
       @media (min-width: 1024px) {
-        h1 { font-size: 3rem; }
-        h2 { font-size: 2.5rem; }
+        h1 { font-size: 3rem; margin-bottom: 1.5rem; }
+        h2 { font-size: 2.5rem; margin-bottom: 1.5rem; }
       }
 
       blockquote {
         border-left: 4px solid var(--color-accent-1);
-        padding-left: 1.5rem;
-        margin: 1.5rem 0;
+        padding-left: 1rem;
+        margin: 1rem 0;
         font-style: italic;
         color: var(--color-soft);
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-family: "Playfair Display", serif;
       }
 
+      @media (min-width: 1024px) {
+        blockquote {
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+        }
+      }
+
       .text-body {
-        margin-top: 1rem;
+        margin-top: 0.5rem;
+        padding-bottom: 3rem; /* Extra space at bottom for scroll */
       }
 
       p {
@@ -185,7 +206,7 @@ import { getCollection } from "astro:content";
 
       ul {
         margin-left: 1.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         color: var(--color-soft);
       }
       
@@ -197,8 +218,6 @@ import { getCollection } from "astro:content";
       .word {
         opacity: 0.2;
         color: var(--color-accent-1);
-        display: inline-block; /* Helps with transforms if needed, but creates wrapping issues if not careful. */
-        /* Better to use default display for flow, just change color/opacity */
         display: inline; 
         transition: color 0.1s, opacity 0.1s;
       }
@@ -395,8 +414,9 @@ import { getCollection } from "astro:content";
           trigger: pinContainer,
           pin: true,
           start: "top top",
-          end: () => "+=" + (slides.length * 150) + "%", // Adjust length of scroll
-          scrub: 0.5,
+          // INCREASED SCROLL LENGTH for smoother, slower experience
+          end: () => "+=" + (slides.length * 400) + "%", 
+          scrub: 1, // Increased smooth scrubbing
           // markers: true
         }
       });
@@ -413,13 +433,13 @@ import { getCollection } from "astro:content";
           tl.to(words, {
             opacity: 1,
             color: "var(--color-text)",
-            stagger: 0.05,
-            duration: 2, // Relative duration for reading
+            stagger: 0.1, // Slower stagger
+            duration: 5, // Longer reading duration
             ease: "none"
           });
         } else {
             // Fallback duration if no words
-            tl.to({}, { duration: 1 });
+            tl.to({}, { duration: 2 });
         }
 
         // B. Transition Phase (if there is a next slide)
@@ -432,74 +452,57 @@ import { getCollection } from "astro:content";
           transitionTl.to(textBody, {
             x: -50,
             opacity: 0,
-            duration: 1,
-            ease: "power2.in"
+            duration: 2,
+            ease: "power2.inOut"
           }, 0);
 
           // 2. Current Title Fades Out
           transitionTl.to(titleElements, {
             opacity: 0,
             y: -20,
-            duration: 1,
-            ease: "power2.in"
+            duration: 2,
+            ease: "power2.inOut"
           }, 0);
 
-          // 3. Current Visual Fades Out (revealing next one underneath if we stacked them)
-          // Actually, we stacked them. visuals[i] is on top of visuals[i+1] if z-index is same?
-          // No, DOM order: last is on top. 
-          // We need to manage z-index or opacity.
-          // Let's rely on Opacity. 
-          // Current visible is visuals[i]. Next is visuals[i+1].
-          // If we fade IN next visual, it covers current.
-          // Setup: all visuals opacity 0 except first.
-          
+          // 3. Visuals Crossfade
           transitionTl.to(nextVisual, {
             opacity: 1,
-            duration: 1,
+            duration: 3, // Slower crossfade
             ease: "none"
           }, 0);
           
-          // And fade out current slightly to be sure
           transitionTl.to(visuals[i], {
             opacity: 0,
-            duration: 1
+            duration: 3
           }, 0);
 
           // 4. Next Slide In
-          // Ensure next slide is visible (opacity 1) but maybe starting position off?
-          // We want "Title Fade In".
           const nextTitleElements = nextSlide.querySelectorAll("h1, h2, blockquote, .section-name");
           const nextTextBody = nextSlide.querySelector(".text-body");
-          
-          // Reset next slide initial state before animating in?
-          // Better: Set initial state in CSS or via .set here
-          // But we are in a timeline.
           
           // Reveal the next container
           transitionTl.to(nextSlide, {
             opacity: 1,
-            duration: 0.1 // Instant visibility of container
-          }, 0.5); // Start slightly overlapping
+            duration: 0.1 
+          }, 1); // Start overlap
           
           // Animate elements in
           transitionTl.fromTo(nextTitleElements, 
             { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 1, stagger: 0.1 },
-            0.6
+            { opacity: 1, y: 0, duration: 2, stagger: 0.2 },
+            1.5
           );
           
           transitionTl.fromTo(nextTextBody,
-            { x: 50, opacity: 0 }, // From Right
-            { x: 0, opacity: 1, duration: 1 },
-            0.6
+            { x: 50, opacity: 0 }, 
+            { x: 0, opacity: 1, duration: 2 },
+            1.5
           );
 
           // Add transition to master
           tl.add(transitionTl);
         }
       });
-      
-      // Ensure final state holds or unpins cleanly.
       
     </script>
   </body>
