@@ -41,20 +41,20 @@ import { getCollection } from "astro:content";
         overflow: hidden;
       }
 
-      /* Fixed Visuals Container */
+      /* Visuals Container */
       #visuals-container {
         position: absolute;
         top: 0;
         right: 0;
         width: 100%;
-        height: 30vh; /* REDUCED MOBILE HEIGHT */
-        z-index: 1;
+        height: 100vh; /* Full screen on mobile (Background) */
+        z-index: 0; /* Behind content on mobile */
       }
 
       @media (min-width: 1024px) {
         #visuals-container {
-          width: 50%; /* Desktop split */
-          height: 100vh;
+          width: 50%; /* Right half on Desktop */
+          z-index: 1; /* Side by side */
         }
       }
 
@@ -69,7 +69,7 @@ import { getCollection } from "astro:content";
       }
 
       .slide-visual:first-child {
-        opacity: 1; /* First one visible */
+        opacity: 1; 
       }
 
       .visual-overlay {
@@ -78,78 +78,69 @@ import { getCollection } from "astro:content";
         left: 0;
         width: 100%;
         height: 100%;
-        /* Darker backdrop on mobile for better text contrast if overlap occurs */
-        background: linear-gradient(to bottom, rgba(26,32,35,0.2), var(--color-bg));
-        opacity: 0.8; /* Increased opacity */
+        background: linear-gradient(to bottom, rgba(26,32,35,0.4), var(--color-bg));
+        opacity: 0.8;
         z-index: 2;
+        pointer-events: none;
+      }
+
+      @media (min-width: 1024px) {
+        .visual-overlay {
+            opacity: 0.3; /* Less overlay on desktop */
+            background: linear-gradient(to bottom, transparent, var(--color-bg));
+        }
       }
 
       /* Content Container */
       #content-container {
         position: absolute;
-        top: 30vh; /* Matches visual height */
+        top: 0;
         left: 0;
         width: 100%;
-        height: 70vh; /* Remaining space */
-        z-index: 2;
-        /* Ensure background is solid to prevent visual bleed */
-        background-color: var(--color-bg); 
+        height: 100vh;
+        z-index: 2; /* On top of visual on mobile */
+        pointer-events: none; /* Let clicks pass through if needed, but text needs interaction? No, text isn't clickable except links */
       }
 
       @media (min-width: 1024px) {
         #content-container {
-          top: 0;
-          width: 50%;
-          height: 100vh;
-          background-color: transparent; /* Transparent on desktop */
+          width: 50%; /* Left half */
         }
       }
 
-      /* Individual Slide */
+      /* Individual Slide Wrapper */
       .slide-content {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        padding: 1.5rem; /* Reduced padding for mobile */
+        padding: 2rem;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start; /* Start from top to avoid centering overlapping top edge */
-        padding-top: 2rem;
-        opacity: 0; /* Default hidden */
-        
-        /* Enable scrolling within the slide if text is long */
-        overflow-y: auto; 
+        justify-content: center; 
+        opacity: 0;
+        /* Ensure we can select text */
         pointer-events: auto;
-        
-        /* Smooth scrolling and chaining */
-        -webkit-overflow-scrolling: touch; 
-        overscroll-behavior: auto; /* Ensure scroll chain to window works */
-      }
-
-      .slide-content:first-child {
-        opacity: 1;
       }
 
       @media (min-width: 1024px) {
         .slide-content {
           padding: 6rem;
-          /* FIX: Use flex-start and fixed top padding for constant positioning */
-          justify-content: flex-start; 
-          padding-top: 20vh;
-          
-          /* Desktop usually fits, but auto is safer */
-          overflow-y: visible; 
         }
       }
 
-      /* Typography */
+      /* Header Wrapper (Title/Quote) */
+      .header-wrapper {
+        margin-bottom: 2rem;
+        /* Will be animated from bottom to top */
+      }
+
       .section-name {
         color: var(--color-accent-2);
         text-transform: uppercase;
         letter-spacing: 0.2em;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         margin-bottom: 0.5rem;
         font-weight: 600;
         display: block;
@@ -162,35 +153,27 @@ import { getCollection } from "astro:content";
         line-height: 1.1;
       }
 
-      h1 { font-size: 2rem; }
-      h2 { font-size: 1.75rem; }
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 2rem; }
 
       @media (min-width: 1024px) {
-        h1 { font-size: 3rem; margin-bottom: 1.5rem; }
-        h2 { font-size: 2.5rem; margin-bottom: 1.5rem; }
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.5rem; }
       }
 
       blockquote {
         border-left: 4px solid var(--color-accent-1);
         padding-left: 1rem;
-        margin: 1rem 0;
+        margin: 0; /* Margin handled by wrapper */
         font-style: italic;
         color: var(--color-soft);
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-family: "Playfair Display", serif;
       }
 
-      @media (min-width: 1024px) {
-        blockquote {
-            padding-left: 1.5rem;
-            margin: 1.5rem 0;
-            font-size: 1.1rem;
-        }
-      }
-
+      /* Body Text Wrapper */
       .text-body {
-        margin-top: 0.5rem;
-        padding-bottom: 5rem; /* Extra space at bottom for scroll chaining */
+        /* Initially hidden or pushed down */
       }
 
       p {
@@ -218,24 +201,19 @@ import { getCollection } from "astro:content";
         margin-bottom: 0.5rem;
       }
 
-      /* Word Animation */
       .word {
         opacity: 0.2;
         color: var(--color-accent-1);
         display: inline; 
-        transition: color 0.1s, opacity 0.1s;
       }
     </style>
   </head>
   <body>
 
-    <!-- Main Pinned Container -->
     <div id="pin-container">
       
-      <!-- Visuals (Right side on Desktop) -->
       <div id="visuals-container">
         <div class="visual-overlay"></div>
-        <!-- Images correspond to slides -->
         <img src="https://picsum.photos/seed/garden1/800/1000" class="slide-visual" alt="Intro" />
         <img src="https://picsum.photos/seed/work1/800/1000" class="slide-visual" alt="Calling" />
         <img src="https://picsum.photos/seed/identity1/800/1000" class="slide-visual" alt="Identity" />
@@ -245,14 +223,15 @@ import { getCollection } from "astro:content";
         <img src="https://picsum.photos/seed/code/800/1000" class="slide-visual" alt="Applying" />
       </div>
 
-      <!-- Content (Left side on Desktop) -->
       <div id="content-container">
         
-        <!-- Intro Slide -->
+        <!-- Intro -->
         <div class="slide-content">
-          <span class="section-name">Introduction</span>
-          <h1>Garden City: Work, Rest & Tech Culture</h1>
-          <blockquote>"From creation to the final heavenly city"</blockquote>
+          <div class="header-wrapper">
+            <span class="section-name">Introduction</span>
+            <h1>Garden City: Work, Rest & Tech Culture</h1>
+            <blockquote>"From creation to the final heavenly city"</blockquote>
+          </div>
           <div class="text-body">
             <p>John Mark Comer's <em>Garden City</em> reframes our 9-to-5 as part of God's grand story. It helps us find our place in the divine plan, moving from the first garden to the final city.</p>
             <p>In Genesis, humanity is made to "work it and take care of it" as an act of service. Even coding or system administration can be sacred—our tech work becomes <em>worship</em> when we use it to care for God's world.</p>
@@ -260,11 +239,13 @@ import { getCollection } from "astro:content";
           </div>
         </div>
 
-        <!-- Slide 1 -->
+        <!-- Part I -->
         <div class="slide-content">
-          <span class="section-name">Part I</span>
-          <h2>Your Calling: Work as God's Mission</h2>
-          <blockquote>"Whatever you do, work heartily, as for the Lord"</blockquote>
+          <div class="header-wrapper">
+            <span class="section-name">Part I</span>
+            <h2>Your Calling: Work as God's Mission</h2>
+            <blockquote>"Whatever you do, work heartily, as for the Lord"</blockquote>
+          </div>
           <div class="text-body">
             <p>Comer emphasizes that <strong>every</strong> job matters. "All work is holy" by God's design. We were not made to pull church and career apart.</p>
             <p>As a believer in tech, you have a <strong>dual vocation</strong>:</p>
@@ -276,11 +257,13 @@ import { getCollection } from "astro:content";
           </div>
         </div>
 
-        <!-- Slide 2 -->
+        <!-- Part II -->
         <div class="slide-content">
-          <span class="section-name">Part II</span>
-          <h2>Identity: Image Bearers, Not Just Doers</h2>
-          <blockquote>"In God's image," not your job</blockquote>
+          <div class="header-wrapper">
+             <span class="section-name">Part II</span>
+             <h2>Identity: Image Bearers, Not Just Doers</h2>
+             <blockquote>"In God's image," not your job</blockquote>
+          </div>
           <div class="text-body">
             <p>Tech culture often defines us by titles or output ("I'm a developer at X"). <em>Garden City</em> pushes back: your primary identity is in God, not your career.</p>
             <p>Scripture says who we are (God's beloved) gives meaning to what we do, not the reverse. This frees us from performance-driven anxiety.</p>
@@ -288,11 +271,13 @@ import { getCollection } from "astro:content";
           </div>
         </div>
 
-        <!-- Slide 3 -->
+        <!-- Part III -->
         <div class="slide-content">
-          <span class="section-name">Part III</span>
-          <h2>Rest & Resilience: Rediscovering Sabbath</h2>
-          <blockquote>"We are not machines"</blockquote>
+          <div class="header-wrapper">
+            <span class="section-name">Part III</span>
+            <h2>Rest & Resilience: Rediscovering Sabbath</h2>
+            <blockquote>"We are not machines"</blockquote>
+          </div>
           <div class="text-body">
             <p>The tech world glorifies hustle. But God worked six days and "on the seventh day he rested." <em>Garden City</em> stresses that burnout is real. Rest isn't just a nap; it's a deliberate pause.</p>
             <p>Tiffany Shlain coins the <strong>"Tech Sabbath"</strong>—one day a week without screens. It's an oasis of peace.</p>
@@ -300,11 +285,13 @@ import { getCollection } from "astro:content";
           </div>
         </div>
 
-        <!-- Slide 4 -->
+        <!-- Part IV -->
         <div class="slide-content">
-          <span class="section-name">Part IV</span>
-          <h2>Living in the Kingdom</h2>
-          <blockquote>"Building a Kingdom on earth"</blockquote>
+          <div class="header-wrapper">
+            <span class="section-name">Part IV</span>
+            <h2>Living in the Kingdom</h2>
+            <blockquote>"Building a Kingdom on earth"</blockquote>
+          </div>
           <div class="text-body">
             <p>Every office is a <strong>missional</strong> context. Companies often have unspoken agendas (profit, consumerism). We enter with a Kingdom worldview.</p>
             <p>Comer invites us to think big: we are helping build a civilization where God's will is done "on earth as it is in heaven."</p>
@@ -312,11 +299,13 @@ import { getCollection } from "astro:content";
           </div>
         </div>
 
-        <!-- Slide 5 -->
+        <!-- Part V -->
         <div class="slide-content">
-          <span class="section-name">Part V</span>
-          <h2>Faith at Work</h2>
-          <blockquote>"Live your faith softly"</blockquote>
+          <div class="header-wrapper">
+            <span class="section-name">Part V</span>
+            <h2>Faith at Work</h2>
+            <blockquote>"Live your faith softly"</blockquote>
+          </div>
           <div class="text-body">
             <p>In secular tech firms, overt evangelism is often unwelcome. Instead, focus on excellence and kindness. Let your work ethic and integrity do the talking.</p>
             <p>Like Daniel, who served faithfully in a pagan culture without compromising his core beliefs, we can refuse unethical practices while excelling at our assignments.</p>
@@ -324,11 +313,13 @@ import { getCollection } from "astro:content";
           </div>
         </div>
 
-        <!-- Slide 6 -->
+        <!-- Part VI -->
         <div class="slide-content">
-          <span class="section-name">Part VI</span>
-          <h2>Applying Garden City</h2>
-          <blockquote>"Your tech job is God's job"</blockquote>
+          <div class="header-wrapper">
+            <span class="section-name">Part VI</span>
+            <h2>Applying Garden City</h2>
+            <blockquote>"Your tech job is God's job"</blockquote>
+          </div>
           <div class="text-body">
             <p><strong>Concrete steps for techies:</strong></p>
             <ul>
@@ -351,162 +342,168 @@ import { getCollection } from "astro:content";
 
       gsap.registerPlugin(ScrollTrigger);
 
-      // --- Helper: Recursive Text Splitting ---
+      // Recursive Text Splitting
       function wrapWords(el) {
-        // Collect text nodes
         const textNodes = [];
         function walk(node) {
-            if (node.nodeType === 3) { // Text
-                textNodes.push(node);
-            } else {
-                node.childNodes.forEach(walk);
-            }
+            if (node.nodeType === 3) textNodes.push(node);
+            else node.childNodes.forEach(walk);
         }
         walk(el);
 
         textNodes.forEach(node => {
             const text = node.nodeValue;
             if (!text.trim()) return;
-            
-            const words = text.split(/(\s+)/); // Split keeping delimiters
+            const words = text.split(/(\s+)/);
             const frag = document.createDocumentFragment();
-            
             words.forEach(word => {
-                if (word.match(/^\s+$/)) {
-                    frag.appendChild(document.createTextNode(word));
-                } else if (word.trim()) {
+                if (word.match(/^\s+$/)) frag.appendChild(document.createTextNode(word));
+                else if (word.trim()) {
                     const span = document.createElement("span");
                     span.className = "word";
                     span.textContent = word;
                     frag.appendChild(span);
                 }
             });
-            
             node.parentNode.replaceChild(frag, node);
         });
       }
 
-      // --- Init ---
+      // Initialization
       const slides = document.querySelectorAll(".slide-content");
       const visuals = document.querySelectorAll(".slide-visual");
       const pinContainer = document.querySelector("#pin-container");
+      
+      const isMobile = window.innerWidth < 1024; // Simple check for logic
 
-      // 1. Prepare Text & Initial States
+      // Prepare Slides
       slides.forEach((slide, i) => {
         const paragraphs = slide.querySelectorAll(".text-body p");
         paragraphs.forEach(wrapWords);
         
-        // Explicitly set initial states to avoid FOUC or logical gaps
-        if (i !== 0) {
-            gsap.set(slide, { opacity: 0 });
-            gsap.set(slide.querySelectorAll(".text-body"), { x: 50, opacity: 0 });
-            gsap.set(slide.querySelectorAll("h1, h2, blockquote, .section-name"), { y: 20, opacity: 0 });
-        }
+        const header = slide.querySelector(".header-wrapper");
+        const body = slide.querySelector(".text-body");
         
-        // Visuals
-        if (i !== 0) {
-             gsap.set(visuals[i], { opacity: 0 });
+        // Initial States
+        if (i === 0) {
+            // Intro: Start with header at bottom, body hidden
+            gsap.set(header, { y: "30vh" }); // Push down initially
+            gsap.set(body, { opacity: 0 }); 
+            gsap.set(slide, { opacity: 1 });
+            gsap.set(visuals[i], { opacity: 1 });
         } else {
-             gsap.set(visuals[i], { opacity: 1 });
+            // Others hidden
+            gsap.set(slide, { opacity: 0 });
+            gsap.set(header, { y: "30vh" });
+            gsap.set(body, { opacity: 0 });
+            gsap.set(visuals[i], { opacity: 0 });
         }
       });
 
-      // 2. Master Timeline
-      // We will pin the container and scrub through all slides
+      // Master Timeline
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinContainer,
           pin: true,
           start: "top top",
-          // INCREASED SCROLL LENGTH for smoother, slower experience
-          end: () => "+=" + (slides.length * 400) + "%", 
-          scrub: 1, // Increased smooth scrubbing
-          // markers: true
+          end: () => "+=" + (slides.length * 500) + "%", // Longer scroll for 2-step process
+          scrub: 1,
         }
       });
 
       slides.forEach((slide, i) => {
+        const header = slide.querySelector(".header-wrapper");
+        const body = slide.querySelector(".text-body");
         const words = slide.querySelectorAll(".word");
-        const titleElements = slide.querySelectorAll("h1, h2, blockquote, .section-name");
-        const textBody = slide.querySelector(".text-body");
-        const nextSlide = slides[i + 1];
-        const nextVisual = visuals[i + 1];
+        const visual = visuals[i];
         
-        // A. Read Phase: Highlight Words
-        if (words.length > 0) {
-          tl.to(words, {
+        const nextSlide = slides[i + 1];
+        const nextHeader = nextSlide ? nextSlide.querySelector(".header-wrapper") : null;
+        const nextVisual = visuals[i + 1];
+
+        // --- STEP 1: HEADER SLIDE -> BODY SLIDE ---
+        // Header moves up, Body fades in, Visual fades out (on mobile)
+        
+        const step1 = gsap.timeline();
+        
+        // Move Header Up
+        step1.to(header, {
+            y: "0vh",
+            duration: 2,
+            ease: "power2.inOut"
+        }, 0);
+
+        // Reveal Body
+        step1.to(body, {
             opacity: 1,
-            color: "var(--color-text)",
-            stagger: 0.1, // Slower stagger
-            duration: 5, // Longer reading duration
-            ease: "none"
-          });
-        } else {
-            // Fallback duration if no words
-            tl.to({}, { duration: 2 });
+            duration: 2
+        }, 0.5);
+
+        // Mobile: Fade Visual to dark (opacity 0.2) so text is readable
+        // Desktop: Visual stays visible (opacity 1)
+        // We use a media query check in GSAP using MatchMedia ideally, but simple logic works
+        // Actually, let's just fade visual slightly on all platforms or handle via CSS classes?
+        // Let's rely on opacity. 
+        // Mobile visual is background. When reading text, we want it dark.
+        // Desktop visual is side-by-side. We want it visible.
+        
+        step1.to(visual, {
+            opacity: isMobile ? 0.2 : 1, 
+            duration: 2
+        }, 0);
+
+        tl.add(step1);
+
+
+        // --- STEP 2: READ BODY (Highlight Words & Scroll Content) ---
+        
+        const step2 = gsap.timeline();
+        
+        // Word Highlight
+        if(words.length > 0) {
+            step2.to(words, {
+                opacity: 1,
+                color: "var(--color-text)",
+                stagger: 0.05,
+                duration: 5,
+                ease: "none"
+            }, 0);
         }
 
-        // B. Transition Phase (if there is a next slide)
-        if (nextSlide) {
-          
-          // Parallel animations for transition
-          const transitionTl = gsap.timeline();
-
-          // 1. Current Text moves Left and Fades
-          transitionTl.to(textBody, {
-            x: -50,
-            opacity: 0,
-            duration: 2,
-            ease: "power2.inOut"
-          }, 0);
-
-          // 2. Current Title Fades Out
-          transitionTl.to(titleElements, {
-            opacity: 0,
-            y: -20,
-            duration: 2,
-            ease: "power2.inOut"
-          }, 0);
-
-          // 3. Visuals Crossfade
-          transitionTl.to(nextVisual, {
-            opacity: 1,
-            duration: 3, // Slower crossfade
+        // Fake Scroll: If content is tall, move it up
+        // We can approximate this by translating the whole slide-content up
+        // calculated roughly based on text length? 
+        // Or just move it up by X amount to be safe.
+        // "make sure when the body is visible it is scrolled"
+        
+        step2.to(slide, {
+            y: "-30vh", // Move content up to reveal bottom text
+            duration: 5,
             ease: "none"
-          }, 0);
-          
-          transitionTl.to(visuals[i], {
-            opacity: 0,
-            duration: 3
-          }, 0);
+        }, 0);
 
-          // 4. Next Slide In
-          const nextTitleElements = nextSlide.querySelectorAll("h1, h2, blockquote, .section-name");
-          const nextTextBody = nextSlide.querySelector(".text-body");
-          
-          // Reveal the next container
-          transitionTl.to(nextSlide, {
-            opacity: 1,
-            duration: 0.1 
-          }, 1); // Start overlap
-          
-          // Animate elements in
-          transitionTl.fromTo(nextTitleElements, 
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 2, stagger: 0.2 },
-            1.5
-          );
-          
-          transitionTl.fromTo(nextTextBody,
-            { x: 50, opacity: 0 }, 
-            { x: 0, opacity: 1, duration: 2 },
-            1.5
-          );
+        tl.add(step2);
 
-          // Add transition to master
-          tl.add(transitionTl);
+
+        // --- STEP 3: TRANSITION TO NEXT HEADER ---
+        if (nextSlide) {
+            const step3 = gsap.timeline();
+            
+            // Fade out current
+            step3.to(slide, { opacity: 0, duration: 2 }, 0);
+            step3.to(visual, { opacity: 0, duration: 2 }, 0); // Fade out visual completely
+
+            // Fade in Next
+            step3.to(nextSlide, { opacity: 1, duration: 2 }, 0);
+            step3.to(nextVisual, { opacity: 1, duration: 2 }, 0); 
+            // Note: Next Header starts at y: 30vh (set initially), so it's at "bottom"
+            
+            tl.add(step3);
         }
       });
+
+      // Recalculate isMobile on resize if needed, but for prototype simpler is fine.
+      // Ideally use ScrollTrigger.matchMedia
       
     </script>
   </body>
