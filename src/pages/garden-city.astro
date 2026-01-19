@@ -27,10 +27,13 @@ import { getCollection } from "astro:content";
         padding: 0;
       }
 
-      body {
+      html, body {
+        width: 100%;
+        min-height: 100vh;
         background-color: var(--color-bg);
         color: var(--color-text);
         font-family: "Inter", sans-serif;
+        overflow-x: hidden; /* Prevent horizontal scroll */
       }
 
       #pin-container {
@@ -40,7 +43,7 @@ import { getCollection } from "astro:content";
         overflow: hidden;
       }
 
-      /* Visuals - Always Full Screen Background */
+      /* Visuals */
       #visuals-container {
         position: absolute;
         top: 0;
@@ -87,7 +90,6 @@ import { getCollection } from "astro:content";
       }
 
       /* Header Wrapper (Title/Quote) */
-      /* RESTORED: Left Alignment */
       .header-wrapper {
         position: absolute;
         top: 50vh; 
@@ -96,11 +98,13 @@ import { getCollection } from "astro:content";
         padding: 2rem;
         z-index: 10;
         text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+        
+        /* Left Align Everything */
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-start; /* Aligns children (text) to left */
         text-align: left;
-        transform-origin: left top;
+        transform-origin: left top; /* Scale from left */
       }
       
       @media (min-width: 1024px) {
@@ -117,8 +121,9 @@ import { getCollection } from "astro:content";
         width: 100%;
         padding: 2rem;
         opacity: 0;
+        
         display: flex;
-        justify-content: flex-start; /* Aligned to left like the title */
+        justify-content: flex-start; /* Left align inner content */
       }
       
       .text-inner {
@@ -147,6 +152,8 @@ import { getCollection } from "astro:content";
         color: var(--color-highlight);
         margin-bottom: 1rem;
         line-height: 1.1;
+        text-align: left; /* Explicit left align */
+        width: 100%;
       }
 
       h1 { font-size: 2.5rem; }
@@ -166,6 +173,7 @@ import { getCollection } from "astro:content";
         font-size: 1.2rem;
         font-family: "Playfair Display", serif;
         max-width: 600px;
+        text-align: left;
       }
 
       p {
@@ -368,10 +376,14 @@ import { getCollection } from "astro:content";
         });
       }
 
+      // Initialization
       const slides = document.querySelectorAll(".slide-content");
       const visuals = document.querySelectorAll(".slide-visual");
       const pinContainer = document.querySelector("#pin-container");
       const backdrop = document.querySelector("#backdrop-layer");
+      
+      const isMobile = window.innerWidth < 1024;
+      const collapsedPadding = isMobile ? "1rem" : "2rem";
 
       slides.forEach((slide, i) => {
         const paragraphs = slide.querySelectorAll(".text-body p");
@@ -422,14 +434,20 @@ import { getCollection } from "astro:content";
         
         p1.to(backdrop, { opacity: 0.9, duration: 2, ease: "power1.inOut" }, 0);
 
-        // Header moves to top (2vh) and scales down (0.6)
-        p1.to(header, { top: "2vh", duration: 2, ease: "power2.inOut" }, 0);
+        // Header moves to top (0) with reduced padding, and scales down (0.6)
+        p1.to(header, { 
+            top: "0", 
+            paddingTop: collapsedPadding, 
+            duration: 2, 
+            ease: "power2.inOut" 
+        }, 0);
+        
         p1.to(title, { scale: 0.6, duration: 2 }, 0);
         
         // Quote fades out
         p1.to(quote, { autoAlpha: 0, height: 0, margin: 0, duration: 2 }, 0);
 
-        // FIX: Centering logic - use top: 50% and yPercent: -50 to keep center in center
+        // Body Moves to Center (top: 50%, yPercent: -50)
         p1.to(body, { 
             top: "50%", 
             yPercent: -50, 
@@ -441,7 +459,7 @@ import { getCollection } from "astro:content";
         tl.add(p1);
 
 
-        // --- PHASE 2: READ BODY ---
+        // --- PHASE 2: READ BODY (Word Highlight + Subtle Scroll) ---
         const p2 = gsap.timeline();
         
         if(words.length > 0) {
@@ -454,9 +472,9 @@ import { getCollection } from "astro:content";
             }, 0);
         }
 
-        // Slight scroll effect while staying mostly centered
+        // Slight scroll effect: Move body up slightly (e.g. from 50% to 40% position) to keep flow active
         p2.to(body, {
-            yPercent: -60, // Slight nudge up to reveal bottom
+            yPercent: -60, // Move from -50% to -60% (upwards)
             duration: 5,
             ease: "none"
         }, 0);
@@ -478,6 +496,9 @@ import { getCollection } from "astro:content";
             tl.add(p3);
         }
       });
+      
+      // Force refresh to ensure calculations are correct after setup
+      ScrollTrigger.refresh();
       
     </script>
   </body>
