@@ -27,13 +27,10 @@ import { getCollection } from "astro:content";
         padding: 0;
       }
 
-      html, body {
-        width: 100%;
-        min-height: 100vh;
+      body {
         background-color: var(--color-bg);
         color: var(--color-text);
         font-family: "Inter", sans-serif;
-        overflow-x: hidden; /* Prevent horizontal scroll */
       }
 
       #pin-container {
@@ -43,7 +40,7 @@ import { getCollection } from "astro:content";
         overflow: hidden;
       }
 
-      /* Visuals */
+      /* Visuals - Always Full Screen Background */
       #visuals-container {
         position: absolute;
         top: 0;
@@ -102,9 +99,8 @@ import { getCollection } from "astro:content";
         /* Left Align Everything */
         display: flex;
         flex-direction: column;
-        align-items: flex-start; /* Aligns children (text) to left */
+        align-items: flex-start;
         text-align: left;
-        transform-origin: left top; /* Scale from left */
       }
       
       @media (min-width: 1024px) {
@@ -123,7 +119,7 @@ import { getCollection } from "astro:content";
         opacity: 0;
         
         display: flex;
-        justify-content: flex-start; /* Left align inner content */
+        justify-content: flex-start; 
       }
       
       .text-inner {
@@ -152,8 +148,10 @@ import { getCollection } from "astro:content";
         color: var(--color-highlight);
         margin-bottom: 1rem;
         line-height: 1.1;
-        text-align: left; /* Explicit left align */
+        text-align: left; 
         width: 100%;
+        /* Important for scale alignment */
+        transform-origin: left top; 
       }
 
       h1 { font-size: 2.5rem; }
@@ -174,6 +172,7 @@ import { getCollection } from "astro:content";
         font-family: "Playfair Display", serif;
         max-width: 600px;
         text-align: left;
+        transform-origin: left top;
       }
 
       p {
@@ -376,7 +375,6 @@ import { getCollection } from "astro:content";
         });
       }
 
-      // Initialization
       const slides = document.querySelectorAll(".slide-content");
       const visuals = document.querySelectorAll(".slide-visual");
       const pinContainer = document.querySelector("#pin-container");
@@ -434,7 +432,8 @@ import { getCollection } from "astro:content";
         
         p1.to(backdrop, { opacity: 0.9, duration: 2, ease: "power1.inOut" }, 0);
 
-        // Header moves to top (0) with reduced padding, and scales down (0.6)
+        // Header moves to top (0) and scales down (0.6)
+        // Explicitly align left during scale
         p1.to(header, { 
             top: "0", 
             paddingTop: collapsedPadding, 
@@ -442,7 +441,12 @@ import { getCollection } from "astro:content";
             ease: "power2.inOut" 
         }, 0);
         
-        p1.to(title, { scale: 0.6, duration: 2 }, 0);
+        p1.to(title, { 
+            scale: 0.6, 
+            transformOrigin: "left top", // Ensure it sticks to left
+            duration: 2, 
+            ease: "power2.inOut"
+        }, 0);
         
         // Quote fades out
         p1.to(quote, { autoAlpha: 0, height: 0, margin: 0, duration: 2 }, 0);
@@ -459,7 +463,7 @@ import { getCollection } from "astro:content";
         tl.add(p1);
 
 
-        // --- PHASE 2: READ BODY (Word Highlight + Subtle Scroll) ---
+        // --- PHASE 2: READ BODY ---
         const p2 = gsap.timeline();
         
         if(words.length > 0) {
@@ -472,9 +476,9 @@ import { getCollection } from "astro:content";
             }, 0);
         }
 
-        // Slight scroll effect: Move body up slightly (e.g. from 50% to 40% position) to keep flow active
+        // Slight scroll effect while staying mostly centered
         p2.to(body, {
-            yPercent: -60, // Move from -50% to -60% (upwards)
+            yPercent: -60, // Slight nudge up to reveal bottom
             duration: 5,
             ease: "none"
         }, 0);
@@ -497,7 +501,6 @@ import { getCollection } from "astro:content";
         }
       });
       
-      // Force refresh to ensure calculations are correct after setup
       ScrollTrigger.refresh();
       
     </script>
