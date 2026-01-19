@@ -91,16 +91,16 @@ import { getCollection } from "astro:content";
         position: absolute;
         top: 50vh; 
         left: 0;
-        width: 100%;
+        width: 100%; /* Ensure full width availability */
         padding: 2rem;
         z-index: 10;
         text-shadow: 0 2px 20px rgba(0,0,0,0.8);
         
-        /* Left Align Everything */
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
+        transform-origin: left top;
       }
       
       @media (min-width: 1024px) {
@@ -150,7 +150,6 @@ import { getCollection } from "astro:content";
         line-height: 1.1;
         text-align: left; 
         width: 100%;
-        /* Important for scale alignment */
         transform-origin: left top; 
       }
 
@@ -410,7 +409,8 @@ import { getCollection } from "astro:content";
           trigger: pinContainer,
           pin: true,
           start: "top top",
-          end: () => "+=" + (slides.length * 600) + "%", 
+          // Longer scroll duration to separate phases
+          end: () => "+=" + (slides.length * 800) + "%", 
           scrub: 1,
         }
       });
@@ -430,33 +430,32 @@ import { getCollection } from "astro:content";
         // --- PHASE 1: ENTER READING MODE ---
         const p1 = gsap.timeline();
         
-        p1.to(backdrop, { opacity: 0.9, duration: 2, ease: "power1.inOut" }, 0);
+        p1.to(backdrop, { opacity: 0.9, duration: 4, ease: "power1.inOut" }, 0);
 
-        // Header moves to top (0) and scales down (0.6)
-        // Explicitly align left during scale
+        // Header moves to top (0) - SLOWER DURATION (4s)
         p1.to(header, { 
             top: "0", 
             paddingTop: collapsedPadding, 
-            duration: 2, 
+            duration: 4, 
             ease: "power2.inOut" 
         }, 0);
         
         p1.to(title, { 
             scale: 0.6, 
-            transformOrigin: "left top", // Ensure it sticks to left
-            duration: 2, 
+            transformOrigin: "left top", 
+            duration: 4, 
             ease: "power2.inOut"
         }, 0);
         
         // Quote fades out
-        p1.to(quote, { autoAlpha: 0, height: 0, margin: 0, duration: 2 }, 0);
+        p1.to(quote, { autoAlpha: 0, height: 0, margin: 0, duration: 4 }, 0);
 
-        // Body Moves to Center (top: 50%, yPercent: -50)
+        // Body Moves to Center
         p1.to(body, { 
             top: "50%", 
             yPercent: -50, 
             opacity: 1, 
-            duration: 2, 
+            duration: 4, 
             ease: "power2.out" 
         }, 0.5);
 
@@ -476,9 +475,8 @@ import { getCollection } from "astro:content";
             }, 0);
         }
 
-        // Slight scroll effect while staying mostly centered
         p2.to(body, {
-            yPercent: -60, // Slight nudge up to reveal bottom
+            yPercent: -60,
             duration: 5,
             ease: "none"
         }, 0);
