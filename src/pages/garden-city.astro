@@ -298,20 +298,7 @@ import { getCollection } from "astro:content";
                 is holy" by God's design. We were not made to pull church and career
                 apart.
               </p>
-              <p>
-                As a believer in tech, you have a <strong>dual vocation</strong
-                >:
-              </p>
-              <ul>
-                <li>
-                  <strong>Professional:</strong> Make your company's systems sing,
-                  as if recreating Eden.
-                </li>
-                <li>
-                  <strong>Disciple:</strong> Let your character raise questions about
-                  meaning, hope, and joy.
-                </li>
-              </ul>
+
               <p>
                 There is no sacred-secular divide. Whether engineering software
                 or managing data, you are stewarding Creation. Ask yourself: <em
@@ -340,12 +327,6 @@ import { getCollection } from "astro:content";
                 Scripture says who we are (God's beloved) gives meaning to what
                 we do, not the reverse. This frees us from performance-driven
                 anxiety.
-              </p>
-              <p>
-                Like J.S. Bach signing music <em>Soli Deo Gloria</em> ("to the glory
-                of God"), our code can carry the same motto. Let <strong
-                  >who you are in Christ</strong
-                > guide how you work, countering the idol of busyness.
               </p>
             </div>
           </div>
@@ -544,7 +525,7 @@ import { getCollection } from "astro:content";
           pin: true,
           start: "top top",
           // Longer scroll duration to separate phases
-          end: () => "+=" + slides.length * 800 + "%",
+          end: () => "+=800%",
           scrub: 1,
         },
       });
@@ -565,7 +546,13 @@ import { getCollection } from "astro:content";
         // --- PHASE 1: ENTER READING MODE ---
         const p1 = gsap.timeline();
 
-        p1.to(backdrop, { opacity: 0.9, duration: 4, ease: "power1.inOut" }, 0);
+        const body_delay = isMobile ? 5 : 10;
+
+        p1.to(
+          backdrop,
+          { opacity: 0.9, duration: 4, ease: "power1.inOut" },
+          body_delay,
+        );
 
         // Header moves to top (0) - SLOWER DURATION (4s)
         p1.to(
@@ -576,7 +563,7 @@ import { getCollection } from "astro:content";
             duration: 4,
             ease: "power2.inOut",
           },
-          0,
+          body_delay,
         );
 
         p1.to(
@@ -588,11 +575,15 @@ import { getCollection } from "astro:content";
             duration: 4,
             ease: "power2.inOut",
           },
-          0,
+          body_delay,
         );
 
         // Quote fades out
-        p1.to(quote, { autoAlpha: 0, height: 0, margin: 0, duration: 4 }, 0);
+        p1.to(
+          quote,
+          { autoAlpha: 0, height: 0, margin: 0, duration: 4 },
+          body_delay,
+        );
 
         // Body Moves to Center
         p1.to(
@@ -604,7 +595,7 @@ import { getCollection } from "astro:content";
             duration: 4,
             ease: "power2.out",
           },
-          0.5,
+          body_delay + 0.5,
         );
 
         tl.add(p1);
@@ -642,12 +633,27 @@ import { getCollection } from "astro:content";
         if (nextSlide) {
           const p3 = gsap.timeline();
 
-          p3.to(backdrop, { opacity: 0.4, duration: 2 }, 0);
-          p3.to(slide, { opacity: 0, duration: 2 }, 0);
-          p3.to(visual, { opacity: 0, duration: 2 }, 0);
+          const slide_transition_duration = isMobile ? 4 : 6;
 
-          p3.set(nextSlide, { zIndex: 10, opacity: 1 }, 0);
-          p3.to(nextVisual, { opacity: 1, duration: 2 }, 0);
+          p3.to(
+            backdrop,
+            { opacity: 0.4, duration: slide_transition_duration },
+            0,
+          );
+          p3.to(slide, { opacity: 0, duration: slide_transition_duration }, 0);
+          p3.to(visual, { opacity: 0, duration: slide_transition_duration }, 0);
+
+          p3.set(
+            nextSlide,
+            { zIndex: 10, opacity: 1 },
+            slide_transition_duration / 2,
+          );
+
+          p3.to(
+            nextVisual,
+            { opacity: 1, duration: slide_transition_duration },
+            0,
+          );
 
           tl.add(p3);
         }
