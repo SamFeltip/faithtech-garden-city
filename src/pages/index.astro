@@ -248,12 +248,19 @@ import Logo from "../assets/icon.svg";
         right: 2rem;
         z-index: 99;
         width: 60px;
-        height: 60px;
+        height: 600px;
         pointer-events: none;
+
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
       }
 
-      #floating-menu-btn:hover ~ #floating-menu-items .menu-item,
-      #floating-menu-items:hover .menu-item {
+      #floating-menu-items:hover {
+        pointer-events: auto;
+      }
+
+      #floating-menu-btn:hover ~ #floating-menu-items {
         pointer-events: auto;
       }
 
@@ -274,11 +281,7 @@ import Logo from "../assets/icon.svg";
         font-family: "Playfair Display", serif;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         bottom: 2rem;
-        right: 2rem;
-      }
-
-      .menu-item:hover {
-        box-shadow: 0 6px 20px rgba(100, 182, 172, 0.4);
+        transform-origin: center bottom;
       }
     </style>
   </head>
@@ -532,8 +535,15 @@ import Logo from "../assets/icon.svg";
         I
       </button>
       <button class="menu-item" data-slide-index="3" title="Rest"> II </button>
-      <button class="menu-item" data-slide-index="4" title="Kingdom">
+      <button class="menu-item" data-slide-index="4" title="Resiliance">
         III
+      </button>
+      <button class="menu-item" data-slide-index="5" title="Kingdom">
+        IV
+      </button>
+      <button class="menu-item" data-slide-index="6" title="Work"> V </button>
+      <button class="menu-item" data-slide-index="7" title="Application">
+        VI
       </button>
     </div>
   </body>
@@ -791,7 +801,7 @@ import Logo from "../assets/icon.svg";
         if (!floatingMenuItems.matches(":hover")) {
           closeMenu();
         }
-      }, 100);
+      }, 150);
     });
 
     floatingMenuItems.addEventListener("mouseleave", closeMenu);
@@ -806,7 +816,7 @@ import Logo from "../assets/icon.svg";
       // Animate menu items opening vertically above button
       menuItems.forEach((item: Element, index: number) => {
         // Position items vertically above button (top to bottom)
-        const yOffset = -(index + 1) * 70; // 70px spacing between items
+        const yOffset = -(index + 1) * 70 - 15; // 70px spacing between items
 
         gsap.to(item, {
           opacity: 1,
