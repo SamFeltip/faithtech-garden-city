@@ -1,3 +1,7 @@
+---
+import Logo from "../assets/icon.svg";
+---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -208,6 +212,74 @@
           font-size: 1.5rem;
         }
       }
+
+      /* Floating Menu Button */
+      #floating-menu-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #fcfffd;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        z-index: 100;
+        transition: transform 0.3s ease;
+      }
+
+      #floating-menu-btn:hover {
+        transform: scale(1.1);
+      }
+
+      #floating-menu-btn.active {
+        transform: rotate(45deg);
+      }
+
+      /* Menu Items Container */
+      #floating-menu-items {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 99;
+        width: 60px;
+        height: 60px;
+        pointer-events: none;
+      }
+
+      #floating-menu-btn:hover ~ #floating-menu-items .menu-item,
+      #floating-menu-items:hover .menu-item {
+        pointer-events: auto;
+      }
+
+      .menu-item {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #fcfffd;
+        border: 2px solid var(--color-accent-2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: var(--color-bg);
+        font-weight: 600;
+        font-family: "Playfair Display", serif;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        bottom: 2rem;
+        right: 2rem;
+      }
+
+      .menu-item:hover {
+        box-shadow: 0 6px 20px rgba(100, 182, 172, 0.4);
+      }
     </style>
   </head>
   <body>
@@ -389,7 +461,7 @@
         <section class="slide-content">
           <div class="header-wrapper">
             <span class="section-name">Part V</span>
-            <h2>Faith at Work</h2>
+            <h2 id="part-v">Faith at Work</h2>
             <blockquote>"Live your faith softly"</blockquote>
           </div>
           <div class="text-body">
@@ -447,219 +519,339 @@
               </p>
             </div>
           </div>
-        </div>
+        </section>
       </article>
     </div>
 
-    <script>
-      import { gsap } from "gsap";
-      import { ScrollTrigger } from "gsap/ScrollTrigger";
+    <!-- Floating Navigation Menu -->
+    <div id="floating-menu-items">
+      <button class="menu-item" data-slide-index="1" title="Calling">
+        <Logo fill="black" width="20px" />
+      </button>
+      <button class="menu-item" data-slide-index="2" title="Identity">
+        I
+      </button>
+      <button class="menu-item" data-slide-index="3" title="Rest"> II </button>
+      <button class="menu-item" data-slide-index="4" title="Kingdom">
+        III
+      </button>
+    </div>
+  </body>
+  <button id="floating-menu-btn">+</button>
 
-      gsap.registerPlugin(ScrollTrigger);
+  <script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-      function wrapWords(el: Element): void {
-        const textNodes: Node[] = [];
-        function walk(node: Node): void {
-          if (node.nodeType === 3) textNodes.push(node);
-          else node.childNodes.forEach(walk);
-        }
-        walk(el);
+    gsap.registerPlugin(ScrollTrigger);
 
-        textNodes.forEach((node: Node) => {
-          const text = node.nodeValue;
-          if (!text || !text.trim()) return;
-          const words = text.split(/(\s+)/);
-          const frag = document.createDocumentFragment();
-          words.forEach((word: string) => {
-            if (word.match(/^\s+$/))
-              frag.appendChild(document.createTextNode(word));
-            else if (word.trim()) {
-              const span = document.createElement("span");
-              span.className = "word";
-              span.textContent = word;
-              frag.appendChild(span);
-            }
-          });
-          if (node.parentNode) node.parentNode.replaceChild(frag, node);
-        });
+    function wrapWords(el: Element): void {
+      const textNodes: Node[] = [];
+      function walk(node: Node): void {
+        if (node.nodeType === 3) textNodes.push(node);
+        else node.childNodes.forEach(walk);
       }
+      walk(el);
 
-      const slides: NodeListOf<Element> =
-        document.querySelectorAll(".slide-content");
-      const visuals: NodeListOf<Element> =
-        document.querySelectorAll(".slide-visual");
-      const pinContainer: Element | null =
-        document.querySelector("#pin-container");
-      const backdrop: Element | null =
-        document.querySelector("#backdrop-layer");
-
-      const isMobile = window.innerWidth < 1024;
-      const collapsedPadding = isMobile ? "1rem" : "2rem";
-
-      slides.forEach((slide: Element, i: number) => {
-        const paragraphs: NodeListOf<Element> =
-          slide.querySelectorAll(".text-body p");
-        paragraphs.forEach((p: Element) => wrapWords(p));
-
-        const header: Element | null = slide.querySelector(".header-wrapper");
-        const body: Element | null = slide.querySelector(".text-body");
-
-        if (i === 0) {
-          gsap.set(header, { top: "50vh", opacity: 1 });
-          gsap.set(body, { top: "100vh", opacity: 0 });
-          gsap.set(slide, { zIndex: 10, opacity: 1 });
-          gsap.set(visuals[i], { opacity: 1 });
-        } else {
-          gsap.set(slide, { zIndex: 1, opacity: 0 });
-          gsap.set(header, { top: "50vh", opacity: 1 });
-          gsap.set(body, { top: "100vh", opacity: 0 });
-          gsap.set(visuals[i], { opacity: 0 });
-        }
+      textNodes.forEach((node: Node) => {
+        const text = node.nodeValue;
+        if (!text || !text.trim()) return;
+        const words = text.split(/(\s+)/);
+        const frag = document.createDocumentFragment();
+        words.forEach((word: string) => {
+          if (word.match(/^\s+$/))
+            frag.appendChild(document.createTextNode(word));
+          else if (word.trim()) {
+            const span = document.createElement("span");
+            span.className = "word";
+            span.textContent = word;
+            frag.appendChild(span);
+          }
+        });
+        if (node.parentNode) node.parentNode.replaceChild(frag, node);
       });
+    }
 
-      gsap.set(backdrop, { opacity: 0.4 });
+    const slides: NodeListOf<Element> =
+      document.querySelectorAll(".slide-content");
+    const visuals: NodeListOf<Element> =
+      document.querySelectorAll(".slide-visual");
+    const pinContainer: Element | null =
+      document.querySelector("#pin-container");
+    const backdrop: Element | null = document.querySelector("#backdrop-layer");
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinContainer,
-          pin: true,
-          start: "top top",
-          // Longer scroll duration to separate phases
-          end: () => "+=800%",
-          scrub: 1,
+    const isMobile = window.innerWidth < 1024;
+    const collapsedPadding = isMobile ? "1rem" : "2rem";
+
+    slides.forEach((slide: Element, i: number) => {
+      const paragraphs: NodeListOf<Element> =
+        slide.querySelectorAll(".text-body p");
+      paragraphs.forEach((p: Element) => wrapWords(p));
+
+      const header: Element | null = slide.querySelector(".header-wrapper");
+      const body: Element | null = slide.querySelector(".text-body");
+
+      if (i === 0) {
+        gsap.set(header, { top: "50vh", opacity: 1 });
+        gsap.set(body, { top: "100vh", opacity: 0 });
+        gsap.set(slide, { zIndex: 10, opacity: 1 });
+        gsap.set(visuals[i], { opacity: 1 });
+      } else {
+        gsap.set(slide, { zIndex: 1, opacity: 0 });
+        gsap.set(header, { top: "50vh", opacity: 1 });
+        gsap.set(body, { top: "100vh", opacity: 0 });
+        gsap.set(visuals[i], { opacity: 0 });
+      }
+    });
+
+    gsap.set(backdrop, { opacity: 0.4 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: pinContainer,
+        pin: true,
+        start: "top top",
+        // Longer scroll duration to separate phases
+        end: () => "+=800%",
+        scrub: 1,
+      },
+    });
+
+    slides.forEach((slide: Element, i: number) => {
+      const header: Element | null = slide.querySelector(".header-wrapper");
+      const body: Element | null = slide.querySelector(".text-body");
+      const words: NodeListOf<Element> = slide.querySelectorAll(".word");
+      const visual: Element = visuals[i];
+
+      const title: Element | null = header?.querySelector("h1, h2") || null;
+      const quote: Element | null = header?.querySelector("blockquote") || null;
+
+      const nextSlide: Element | undefined = slides[i + 1];
+      const nextVisual: Element | undefined = visuals[i + 1];
+
+      // --- PHASE 1: ENTER READING MODE ---
+      const p1 = gsap.timeline();
+
+      const body_delay = 10;
+
+      p1.to(
+        backdrop,
+        { opacity: 0.9, duration: 4, ease: "power1.inOut" },
+        body_delay,
+      );
+
+      // Header moves to top (0) - SLOWER DURATION (4s)
+      p1.to(
+        header,
+        {
+          top: "0",
+          paddingTop: collapsedPadding,
+          duration: 4,
+          ease: "power2.inOut",
         },
-      });
+        body_delay,
+      );
 
-      slides.forEach((slide: Element, i: number) => {
-        const header: Element | null = slide.querySelector(".header-wrapper");
-        const body: Element | null = slide.querySelector(".text-body");
-        const words: NodeListOf<Element> = slide.querySelectorAll(".word");
-        const visual: Element = visuals[i];
+      p1.to(
+        title,
+        {
+          width: "167%",
+          scale: 0.6,
+          transformOrigin: "left top",
+          duration: 4,
+          ease: "power2.inOut",
+        },
+        body_delay,
+      );
 
-        const title: Element | null = header?.querySelector("h1, h2") || null;
-        const quote: Element | null =
-          header?.querySelector("blockquote") || null;
+      // Quote fades out
+      p1.to(
+        quote,
+        { autoAlpha: 0, height: 0, margin: 0, duration: 4 },
+        body_delay,
+      );
 
-        const nextSlide: Element | undefined = slides[i + 1];
-        const nextVisual: Element | undefined = visuals[i + 1];
+      // Body Moves to Center
+      p1.to(
+        body,
+        {
+          top: "55%",
+          yPercent: -50,
+          opacity: 1,
+          duration: 4,
+          ease: "power2.out",
+        },
+        body_delay + 0.5,
+      );
 
-        // --- PHASE 1: ENTER READING MODE ---
-        const p1 = gsap.timeline();
+      tl.add(p1);
 
-        const body_delay = 10;
+      // --- PHASE 2: READ BODY ---
+      const p2 = gsap.timeline();
 
-        p1.to(
-          backdrop,
-          { opacity: 0.9, duration: 4, ease: "power1.inOut" },
-          body_delay,
-        );
-
-        // Header moves to top (0) - SLOWER DURATION (4s)
-        p1.to(
-          header,
-          {
-            top: "0",
-            paddingTop: collapsedPadding,
-            duration: 4,
-            ease: "power2.inOut",
-          },
-          body_delay,
-        );
-
-        p1.to(
-          title,
-          {
-            width: "167%",
-            scale: 0.6,
-            transformOrigin: "left top",
-            duration: 4,
-            ease: "power2.inOut",
-          },
-          body_delay,
-        );
-
-        // Quote fades out
-        p1.to(
-          quote,
-          { autoAlpha: 0, height: 0, margin: 0, duration: 4 },
-          body_delay,
-        );
-
-        // Body Moves to Center
-        p1.to(
-          body,
-          {
-            top: "55%",
-            yPercent: -50,
-            opacity: 1,
-            duration: 4,
-            ease: "power2.out",
-          },
-          body_delay + 0.5,
-        );
-
-        tl.add(p1);
-
-        // --- PHASE 2: READ BODY ---
-        const p2 = gsap.timeline();
-
-        if (words.length > 0) {
-          p2.to(
-            words,
-            {
-              opacity: 1,
-              color: "var(--color-text)",
-              stagger: 0.1,
-              duration: 5,
-              ease: "none",
-            },
-            0,
-          );
-        }
-
+      if (words.length > 0) {
         p2.to(
-          body,
+          words,
           {
-            yPercent: -60,
+            opacity: 1,
+            color: "var(--color-text)",
+            stagger: 0.1,
             duration: 5,
             ease: "none",
           },
           0,
         );
+      }
 
-        tl.add(p2);
+      p2.to(
+        body,
+        {
+          yPercent: -60,
+          duration: 5,
+          ease: "none",
+        },
+        0,
+      );
 
-        // --- PHASE 3: TRANSITION TO NEXT ---
-        if (nextSlide) {
-          const p3 = gsap.timeline();
+      tl.add(p2);
 
-          const slide_transition_duration = 6;
+      // --- PHASE 3: TRANSITION TO NEXT ---
+      if (nextSlide) {
+        const p3 = gsap.timeline();
 
-          p3.to(
-            backdrop,
-            { opacity: 0.4, duration: slide_transition_duration },
-            0,
-          );
-          p3.to(slide, { opacity: 0, duration: slide_transition_duration }, 0);
-          p3.to(visual, { opacity: 0, duration: slide_transition_duration }, 0);
+        const slide_transition_duration = 6;
 
-          p3.set(
-            nextSlide,
-            { zIndex: 10, opacity: 1 },
-            slide_transition_duration / 2,
-          );
+        p3.to(
+          backdrop,
+          { opacity: 0.4, duration: slide_transition_duration },
+          0,
+        );
+        p3.to(slide, { opacity: 0, duration: slide_transition_duration }, 0);
+        p3.to(visual, { opacity: 0, duration: slide_transition_duration }, 0);
 
-          p3.to(
-            nextVisual,
-            { opacity: 1, duration: slide_transition_duration },
-            0,
-          );
+        p3.set(
+          nextSlide,
+          { zIndex: 10, opacity: 1 },
+          slide_transition_duration / 2,
+        );
 
-          tl.add(p3);
-        }
+        p3.to(
+          nextVisual,
+          { opacity: 1, duration: slide_transition_duration },
+          0,
+        );
+
+        tl.add(p3);
+      }
+    });
+
+    ScrollTrigger.refresh();
+
+    // Floating Menu Functionality
+    const floatingMenuBtn: Element | null =
+      document.getElementById("floating-menu-btn");
+    const floatingMenuItems: Element | null = document.getElementById(
+      "floating-menu-items",
+    );
+    const menuItems: NodeListOf<Element> =
+      document.querySelectorAll(".menu-item");
+    let menuOpen = false;
+
+    if (!floatingMenuItems || !floatingMenuBtn)
+      throw new Error("elements don't exist");
+
+    // Initialize menu items to hidden state
+    gsap.set(menuItems, {
+      opacity: 0,
+      pointerEvents: "none",
+      scale: 0,
+      y: 0,
+    });
+
+    // Setup click handlers for menu items
+    menuItems.forEach((item: Element) => {
+      const slideIndex = parseInt(item.getAttribute("data-slide-index") || "0");
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        scrollToSlide(slideIndex);
+        closeMenu();
       });
+    });
 
-      ScrollTrigger.refresh();
-    </script>
-  </body>
+    // Toggle menu on button click (touch support)
+    floatingMenuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      menuOpen ? closeMenu() : openMenu();
+    });
+
+    // Hover to open menu (desktop)
+    floatingMenuBtn.addEventListener("mouseenter", openMenu);
+    floatingMenuBtn.addEventListener("mouseleave", () => {
+      setTimeout(() => {
+        if (!floatingMenuItems.matches(":hover")) {
+          closeMenu();
+        }
+      }, 100);
+    });
+
+    floatingMenuItems.addEventListener("mouseleave", closeMenu);
+
+    function openMenu() {
+      if (menuOpen) return;
+      if (!floatingMenuBtn) return;
+
+      menuOpen = true;
+      floatingMenuBtn.classList.add("active");
+
+      // Animate menu items opening vertically above button
+      menuItems.forEach((item: Element, index: number) => {
+        // Position items vertically above button (top to bottom)
+        const yOffset = -(index + 1) * 70; // 70px spacing between items
+
+        gsap.to(item, {
+          opacity: 1,
+          pointerEvents: "auto",
+          scale: 1,
+          y: yOffset,
+          duration: 0.4,
+          delay: index * 0.08,
+          ease: "back.out",
+        });
+      });
+    }
+
+    function closeMenu() {
+      if (!menuOpen) return;
+      if (!floatingMenuBtn) return;
+
+      menuOpen = false;
+      floatingMenuBtn.classList.remove("active");
+
+      // Animate menu items closing
+      gsap.to(menuItems, {
+        opacity: 0,
+        pointerEvents: "none",
+        scale: 0,
+        y: 0,
+        duration: 0.3,
+        ease: "back.in",
+      });
+    }
+
+    function scrollToSlide(slideIndex: number) {
+      // The timeline total duration represents all 7 slides
+      // Each slide gets approximately equal scroll distance
+      const slideHeight = window.innerHeight;
+      // Calculate based on the 800% end value in scrollTrigger
+      const totalScrollDistance = slideHeight * 8;
+      // Distribute evenly across 7 slides
+      const scrollAmount = (slideIndex / 7) * totalScrollDistance;
+      window.scrollTo({ top: scrollAmount, behavior: "smooth" });
+    }
+
+    // Close menu when clicking elsewhere
+    document.addEventListener("click", () => {
+      if (menuOpen) closeMenu();
+    });
+  </script>
 </html>
