@@ -1,43 +1,665 @@
----
-
----
-
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>FaithTech Presentation</title>
-		<style>
-			body {
-				font-family: system-ui, sans-serif;
-				background-color: #1A2023;
-				color: #FCFFFD;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				height: 100vh;
-				margin: 0;
-			}
-			a {
-				color: #64B6AC;
-				font-size: 1.5rem;
-				text-decoration: none;
-				border: 2px solid #64B6AC;
-				padding: 1rem 2rem;
-				border-radius: 8px;
-				transition: all 0.3s ease;
-			}
-			a:hover {
-				background-color: #64B6AC;
-				color: #1A2023;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>FaithTech Presentation</h1>
-		<a href="/garden-city">View "Garden City" Presentation</a>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Garden City: Work, Rest & Tech Culture</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap");
+
+      :root {
+        --color-bg: #1a2023;
+        --color-accent-1: #5d737e;
+        --color-accent-2: #64b6ac;
+        --color-highlight: #c0fdfb;
+        --color-soft: #daffef;
+        --color-text: #fcfffd;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        font-family: "Inter", sans-serif;
+      }
+
+      #pin-container {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Visuals - Always Full Screen Background */
+      #visuals-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 0;
+      }
+
+      .slide-visual {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+      }
+
+      .slide-visual:first-child {
+        opacity: 1;
+      }
+
+      /* Full Page Backdrop Layer */
+      #backdrop-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--color-bg);
+        opacity: 0.4;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* Slide Wrapper */
+      .slide-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: auto;
+        z-index: 5;
+      }
+
+      /* Header Wrapper (Title/Quote) */
+      .header-wrapper {
+        position: absolute;
+        top: 50vh;
+        left: 0;
+        width: 100%; /* Ensure full width availability */
+        padding: 2rem;
+        z-index: 10;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        transform-origin: left top;
+      }
+
+      @media (min-width: 1024px) {
+        .header-wrapper {
+          padding: 4rem 6rem;
+        }
+      }
+
+      /* Body Text Wrapper */
+      .text-body {
+        position: absolute;
+        top: 100vh;
+        left: 0;
+        width: 100%;
+        padding: 2rem;
+        opacity: 0;
+
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .text-inner {
+        max-width: 700px;
+      }
+
+      @media (min-width: 1024px) {
+        .text-body {
+          padding: 0 6rem;
+        }
+      }
+
+      /* Typography */
+      .section-name {
+        color: var(--color-accent-2);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        display: block;
+      }
+
+      h1,
+      h2 {
+        font-family: "Playfair Display", serif;
+        color: var(--color-highlight);
+        margin-bottom: 1rem;
+        line-height: 1.1;
+        text-align: left;
+        width: 100%;
+        transform-origin: left top;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+      h2 {
+        font-size: 2rem;
+      }
+
+      blockquote {
+        border-left: 4px solid var(--color-accent-2);
+        padding-left: 1rem;
+        margin: 0;
+        font-style: italic;
+        color: var(--color-soft);
+        font-size: 1.2rem;
+        font-family: "Playfair Display", serif;
+        max-width: 600px;
+        text-align: left;
+        transform-origin: left top;
+      }
+
+      p {
+        line-height: 1.8;
+        margin-bottom: 1.2rem;
+        color: var(--color-text);
+        font-size: 1.1rem;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      ul {
+        margin-left: 1.5rem;
+        margin-bottom: 1.2rem;
+        color: var(--color-soft);
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+
+      .word {
+        opacity: 0.2;
+        color: var(--color-accent-1);
+        display: inline;
+      }
+
+      @media (min-width: 1024px) {
+        h1 {
+          font-size: 5rem;
+        }
+        h2 {
+          font-size: 4rem;
+        }
+
+        p {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pin-container">
+      <div id="visuals-container">
+        <img
+          src="https://picsum.photos/seed/garden1/1600/1200"
+          class="slide-visual"
+          alt="Intro"
+        />
+        <img
+          src="https://picsum.photos/seed/work1/1600/1200"
+          class="slide-visual"
+          alt="Calling"
+        />
+        <img
+          src="https://picsum.photos/seed/identity1/1600/1200"
+          class="slide-visual"
+          alt="Identity"
+        />
+        <img
+          src="https://picsum.photos/seed/relax/1600/1200"
+          class="slide-visual"
+          alt="Rest"
+        />
+        <img
+          src="https://picsum.photos/seed/city/1600/1200"
+          class="slide-visual"
+          alt="Kingdom"
+        />
+        <img
+          src="https://picsum.photos/seed/office/1600/1200"
+          class="slide-visual"
+          alt="Faith"
+        />
+        <img
+          src="https://picsum.photos/seed/code/1600/1200"
+          class="slide-visual"
+          alt="Applying"
+        />
+      </div>
+
+      <div id="backdrop-layer"></div>
+
+      <article id="content-container">
+        <!-- Intro -->
+        <section class="slide-content">
+          <div class="header-wrapper">
+            <span class="section-name">Introduction</span>
+            <h1>Garden City: Work, Rest & Tech Culture</h1>
+            <blockquote>"From creation to the final heavenly city"</blockquote>
+          </div>
+          <div class="text-body">
+            <div class="text-inner">
+              <p>
+                John Mark Comer's <em>Garden City</em> reframes our 9-to-5 as part
+                of God's grand story. It helps us find our place in the divine plan,
+                moving from the first garden to the final city.
+              </p>
+              <p>
+                In Genesis, humanity is made to "work it and take care of it" as
+                an act of service. Even coding or system administration can be
+                sacred—our tech work becomes <em>worship</em> when we use it to care
+                for God's world.
+              </p>
+              <p>
+                The future isn't just a return to Eden, but a journey forward
+                into a "Garden-like world" where we cooperate with God in
+                building a civilization for human flourishing.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Part I -->
+        <section class="slide-content">
+          <div class="header-wrapper">
+            <span class="section-name">Part I</span>
+            <h2>Your Calling: Work as God's Mission</h2>
+            <blockquote>
+              "Whatever you do, work heartily, as for the Lord"
+            </blockquote>
+          </div>
+          <div class="text-body">
+            <div class="text-inner">
+              <p>
+                Comer emphasizes that <strong>every</strong> job matters. "All work
+                is holy" by God's design. We were not made to pull church and career
+                apart.
+              </p>
+
+              <p>
+                There is no sacred-secular divide. Whether engineering software
+                or managing data, you are stewarding Creation. Ask yourself: <em
+                  >Does my project make the world more 'garden-like'?</em
+                >
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Part II -->
+        <section class="slide-content">
+          <div class="header-wrapper">
+            <span class="section-name">Part II</span>
+            <h2>Identity: Image Bearers, Not Just Doers</h2>
+            <blockquote>"In God's image," not your job</blockquote>
+          </div>
+          <div class="text-body">
+            <div class="text-inner">
+              <p>
+                Tech culture often defines us by titles or output ("I'm a
+                developer at X"). <em>Garden City</em> pushes back: your primary identity
+                is in God, not your career.
+              </p>
+              <p>
+                Scripture says who we are (God's beloved) gives meaning to what
+                we do, not the reverse. This frees us from performance-driven
+                anxiety.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Part III -->
+        <section class="slide-content">
+          <div class="header-wrapper">
+            <span class="section-name">Part III</span>
+            <h2>Rest & Resilience: Rediscovering Sabbath</h2>
+            <blockquote>"We are not machines"</blockquote>
+          </div>
+          <div class="text-body">
+            <div class="text-inner">
+              <p>
+                The tech world glorifies hustle. But God worked six days and "on
+                the seventh day he rested." <em>Garden City</em> stresses that burnout
+                is real. Rest isn't just a nap; it's a deliberate pause.
+              </p>
+              <p>
+                Tiffany Shlain coins the <strong>"Tech Sabbath"</strong>—one day
+                a week without screens. It's an oasis of peace.
+              </p>
+              <p>
+                By resting, we acknowledge "God is God and we are not." We trust
+                Him rather than our own productivity.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Part IV -->
+        <section class="slide-content">
+          <div class="header-wrapper">
+            <span class="section-name">Part IV</span>
+            <h2>Living in the Kingdom</h2>
+            <blockquote>"Building a Kingdom on earth"</blockquote>
+          </div>
+          <div class="text-body">
+            <div class="text-inner">
+              <p>
+                Every office is a <strong>missional</strong> context. Companies often
+                have unspoken agendas (profit, consumerism). We enter with a Kingdom
+                worldview.
+              </p>
+              <p>
+                Comer invites us to think big: we are helping build a
+                civilization where God's will is done "on earth as it is in
+                heaven."
+              </p>
+              <p>
+                Every ethical decision, helpful tool, or faithful action pushes
+                back darkness and spreads the beauty of God's Kingdom.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Part V -->
+        <section class="slide-content">
+          <div class="header-wrapper">
+            <span class="section-name">Part V</span>
+            <h2>Faith at Work</h2>
+            <blockquote>"Live your faith softly"</blockquote>
+          </div>
+          <div class="text-body">
+            <div class="text-inner">
+              <p>
+                In secular tech firms, overt evangelism is often unwelcome.
+                Instead, focus on excellence and kindness. Let your work ethic
+                and integrity do the talking.
+              </p>
+              <p>
+                Like Daniel, who served faithfully in a pagan culture without
+                compromising his core beliefs, we can refuse unethical practices
+                while excelling at our assignments.
+              </p>
+              <p>
+                Whether your workplace is "Faith-Avoiding" or "Faith-Tolerant,"
+                serve the Lord Christ through your competence and character.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Part VI -->
+        <section class="slide-content">
+          <div class="header-wrapper">
+            <span class="section-name">Part VI</span>
+            <h2>Applying Garden City</h2>
+            <blockquote>"Your tech job is God's job"</blockquote>
+          </div>
+          <div class="text-body">
+            <div class="text-inner">
+              <p><strong>Concrete steps for techies:</strong></p>
+              <ul>
+                <li>
+                  <strong>Work Heartily:</strong> Write clean code to honor God.
+                </li>
+                <li>
+                  <strong>Envision Impact:</strong> Does this help humans flourish?
+                </li>
+                <li>
+                  <strong>Rest Intentionally:</strong> Try a screen-free Sabbath.
+                </li>
+                <li>
+                  <strong>Live Out Faith:</strong> Be the person others point to as
+                  an example of what is best.
+                </li>
+                <li>
+                  <strong>Keep Eternity in View:</strong> We are building Heaven's
+                  city, one task at a time.
+                </li>
+              </ul>
+              <p>
+                <em>Garden City</em> allows us to see our work with new eyes. We are
+                co-creators in God's world.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <script>
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      function wrapWords(el: Element): void {
+        const textNodes: Node[] = [];
+        function walk(node: Node): void {
+          if (node.nodeType === 3) textNodes.push(node);
+          else node.childNodes.forEach(walk);
+        }
+        walk(el);
+
+        textNodes.forEach((node: Node) => {
+          const text = node.nodeValue;
+          if (!text || !text.trim()) return;
+          const words = text.split(/(\s+)/);
+          const frag = document.createDocumentFragment();
+          words.forEach((word: string) => {
+            if (word.match(/^\s+$/))
+              frag.appendChild(document.createTextNode(word));
+            else if (word.trim()) {
+              const span = document.createElement("span");
+              span.className = "word";
+              span.textContent = word;
+              frag.appendChild(span);
+            }
+          });
+          if (node.parentNode) node.parentNode.replaceChild(frag, node);
+        });
+      }
+
+      const slides: NodeListOf<Element> =
+        document.querySelectorAll(".slide-content");
+      const visuals: NodeListOf<Element> =
+        document.querySelectorAll(".slide-visual");
+      const pinContainer: Element | null =
+        document.querySelector("#pin-container");
+      const backdrop: Element | null =
+        document.querySelector("#backdrop-layer");
+
+      const isMobile = window.innerWidth < 1024;
+      const collapsedPadding = isMobile ? "1rem" : "2rem";
+
+      slides.forEach((slide: Element, i: number) => {
+        const paragraphs: NodeListOf<Element> =
+          slide.querySelectorAll(".text-body p");
+        paragraphs.forEach((p: Element) => wrapWords(p));
+
+        const header: Element | null = slide.querySelector(".header-wrapper");
+        const body: Element | null = slide.querySelector(".text-body");
+
+        if (i === 0) {
+          gsap.set(header, { top: "50vh", opacity: 1 });
+          gsap.set(body, { top: "100vh", opacity: 0 });
+          gsap.set(slide, { zIndex: 10, opacity: 1 });
+          gsap.set(visuals[i], { opacity: 1 });
+        } else {
+          gsap.set(slide, { zIndex: 1, opacity: 0 });
+          gsap.set(header, { top: "50vh", opacity: 1 });
+          gsap.set(body, { top: "100vh", opacity: 0 });
+          gsap.set(visuals[i], { opacity: 0 });
+        }
+      });
+
+      gsap.set(backdrop, { opacity: 0.4 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: pinContainer,
+          pin: true,
+          start: "top top",
+          // Longer scroll duration to separate phases
+          end: () => "+=800%",
+          scrub: 1,
+        },
+      });
+
+      slides.forEach((slide: Element, i: number) => {
+        const header: Element | null = slide.querySelector(".header-wrapper");
+        const body: Element | null = slide.querySelector(".text-body");
+        const words: NodeListOf<Element> = slide.querySelectorAll(".word");
+        const visual: Element = visuals[i];
+
+        const title: Element | null = header?.querySelector("h1, h2") || null;
+        const quote: Element | null =
+          header?.querySelector("blockquote") || null;
+
+        const nextSlide: Element | undefined = slides[i + 1];
+        const nextVisual: Element | undefined = visuals[i + 1];
+
+        // --- PHASE 1: ENTER READING MODE ---
+        const p1 = gsap.timeline();
+
+        const body_delay = 10;
+
+        p1.to(
+          backdrop,
+          { opacity: 0.9, duration: 4, ease: "power1.inOut" },
+          body_delay,
+        );
+
+        // Header moves to top (0) - SLOWER DURATION (4s)
+        p1.to(
+          header,
+          {
+            top: "0",
+            paddingTop: collapsedPadding,
+            duration: 4,
+            ease: "power2.inOut",
+          },
+          body_delay,
+        );
+
+        p1.to(
+          title,
+          {
+            width: "167%",
+            scale: 0.6,
+            transformOrigin: "left top",
+            duration: 4,
+            ease: "power2.inOut",
+          },
+          body_delay,
+        );
+
+        // Quote fades out
+        p1.to(
+          quote,
+          { autoAlpha: 0, height: 0, margin: 0, duration: 4 },
+          body_delay,
+        );
+
+        // Body Moves to Center
+        p1.to(
+          body,
+          {
+            top: "55%",
+            yPercent: -50,
+            opacity: 1,
+            duration: 4,
+            ease: "power2.out",
+          },
+          body_delay + 0.5,
+        );
+
+        tl.add(p1);
+
+        // --- PHASE 2: READ BODY ---
+        const p2 = gsap.timeline();
+
+        if (words.length > 0) {
+          p2.to(
+            words,
+            {
+              opacity: 1,
+              color: "var(--color-text)",
+              stagger: 0.1,
+              duration: 5,
+              ease: "none",
+            },
+            0,
+          );
+        }
+
+        p2.to(
+          body,
+          {
+            yPercent: -60,
+            duration: 5,
+            ease: "none",
+          },
+          0,
+        );
+
+        tl.add(p2);
+
+        // --- PHASE 3: TRANSITION TO NEXT ---
+        if (nextSlide) {
+          const p3 = gsap.timeline();
+
+          const slide_transition_duration = 6;
+
+          p3.to(
+            backdrop,
+            { opacity: 0.4, duration: slide_transition_duration },
+            0,
+          );
+          p3.to(slide, { opacity: 0, duration: slide_transition_duration }, 0);
+          p3.to(visual, { opacity: 0, duration: slide_transition_duration }, 0);
+
+          p3.set(
+            nextSlide,
+            { zIndex: 10, opacity: 1 },
+            slide_transition_duration / 2,
+          );
+
+          p3.to(
+            nextVisual,
+            { opacity: 1, duration: slide_transition_duration },
+            0,
+          );
+
+          tl.add(p3);
+        }
+      });
+
+      ScrollTrigger.refresh();
+    </script>
+  </body>
 </html>
