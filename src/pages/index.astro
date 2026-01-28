@@ -215,77 +215,6 @@ import Logo from "../assets/icon.svg";
           font-size: 1.5rem;
         }
       }
-
-      /* Floating Menu Button */
-      #floating-menu-btn {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background-color: #fcfffd;
-        border: none;
-        cursor: pointer;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        z-index: 100;
-        transition: transform 0.3s ease;
-      }
-
-      #floating-menu-btn:hover {
-        transform: scale(1.1);
-      }
-
-      #floating-menu-btn.active {
-        transform: rotate(45deg);
-      }
-
-      /* Menu Items Container */
-      #floating-menu-items {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 99;
-        width: 60px;
-        height: 600px;
-        pointer-events: none;
-
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: center;
-      }
-
-      #floating-menu-items:hover {
-        pointer-events: auto;
-      }
-
-      #floating-menu-btn:hover ~ #floating-menu-items {
-        pointer-events: auto;
-      }
-
-      .menu-item {
-        position: fixed;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: #fcfffd;
-        border: 2px solid var(--color-accent-2);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        color: var(--color-bg);
-        font-weight: 600;
-        font-family: "Playfair Display", serif;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        bottom: 2rem;
-        transform-origin: center bottom;
-      }
     </style>
   </head>
   <body>
@@ -460,22 +389,7 @@ import Logo from "../assets/icon.svg";
         </section>
       </article>
     </div>
-
-    <!-- Floating Navigation Menu -->
-    <div id="floating-menu-items">
-      <button class="menu-item" data-slide-index="4" title="Resiliance">
-        III
-      </button>
-      <button class="menu-item" data-slide-index="3" title="Rest"> II </button>
-      <button class="menu-item" data-slide-index="2" title="Identity">
-        I
-      </button>
-      <button class="menu-item" data-slide-index="1" title="Calling">
-        <Logo fill="black" width="20px" />
-      </button>
-    </div>
   </body>
-  <button id="floating-menu-btn" class="">+</button>
 
   <script>
     import { gsap } from "gsap";
@@ -614,7 +528,7 @@ import Logo from "../assets/icon.svg";
       p1.to(
         body,
         {
-          top: "15vh",
+          top: "18vh",
           yPercent: 0,
           opacity: 1,
           duration: 4,
@@ -703,119 +617,5 @@ import Logo from "../assets/icon.svg";
     });
 
     ScrollTrigger.refresh();
-
-    // Floating Menu Functionality
-    const floatingMenuBtn: Element | null =
-      document.getElementById("floating-menu-btn");
-    const floatingMenuItems: Element | null = document.getElementById(
-      "floating-menu-items",
-    );
-    const menuItems: NodeListOf<Element> =
-      document.querySelectorAll(".menu-item");
-
-    if (!floatingMenuItems || !floatingMenuBtn)
-      throw new Error("elements don't exist");
-
-    // Initialize menu items to hidden state
-    gsap.set(menuItems, {
-      opacity: 0,
-      pointerEvents: "none",
-      scale: 0,
-      y: 0,
-    });
-
-    // Setup click handlers for menu items
-    menuItems.forEach((item: Element) => {
-      const slideIndex = parseInt(item.getAttribute("data-slide-index") || "0");
-      item.addEventListener("click", (e) => {
-        e.stopPropagation();
-        scrollToSlide(slideIndex);
-        closeMenu();
-      });
-    });
-
-    // Toggle menu on button click (touch support)
-    floatingMenuBtn.addEventListener("click", (e) => {
-      console.log("floatingMenuBtn clicked");
-      e.stopPropagation();
-      floatingMenuBtn.classList.contains("active") ? closeMenu() : openMenu();
-    });
-
-    // Hover to open menu (desktop)
-    floatingMenuBtn.addEventListener("mouseenter", openMenu);
-    floatingMenuBtn.addEventListener("mouseenter", () => {
-      console.log("floatingMenuBtn mouse enter");
-    });
-
-    floatingMenuBtn.addEventListener("mouseleave", () => {
-      setTimeout(() => {
-        if (!floatingMenuItems.matches(":hover")) {
-          closeMenu();
-        }
-      }, 150);
-    });
-
-    floatingMenuItems.addEventListener("mouseleave", closeMenu);
-    floatingMenuItems.addEventListener("mouseleave", () =>
-      console.log("floatingMenuItems mouse leave"),
-    );
-
-    function openMenu() {
-      if (!floatingMenuBtn) return;
-      if (floatingMenuBtn.classList.contains("active")) return;
-
-      console.log("adding active class...");
-      floatingMenuBtn.classList.add("active");
-
-      // Animate menu items opening vertically above button
-      menuItems.forEach((item: Element, index: number) => {
-        // Position items vertically above button (top to bottom)
-        const yOffset = -(index + 1) * 70 - 15; // 70px spacing between items
-
-        gsap.to(item, {
-          opacity: 1,
-          pointerEvents: "auto",
-          scale: 1,
-          y: yOffset,
-          duration: 0.4,
-          delay: index * 0.08,
-          ease: "back.out",
-        });
-      });
-    }
-
-    function closeMenu() {
-      if (!floatingMenuBtn) return;
-      if (!floatingMenuBtn.classList.contains("active")) return;
-
-      console.log("removing active class...");
-      floatingMenuBtn.classList.remove("active");
-
-      // Animate menu items closing
-      gsap.to(menuItems, {
-        opacity: 0,
-        pointerEvents: "none",
-        scale: 0,
-        y: 0,
-        duration: 0.3,
-        ease: "back.in",
-      });
-    }
-
-    function scrollToSlide(slideIndex: number) {
-      // The timeline total duration represents all 7 slides
-      // Each slide gets approximately equal scroll distance
-      const slideHeight = window.innerHeight;
-      // Calculate based on the 800% end value in scrollTrigger
-      const totalScrollDistance = slideHeight * 8;
-      // Distribute evenly across 7 slides
-      const scrollAmount = (slideIndex / 7) * totalScrollDistance;
-      window.scrollTo({ top: scrollAmount, behavior: "smooth" });
-    }
-
-    // Close menu when clicking elsewhere
-    document.addEventListener("click", () => {
-      if (floatingMenuBtn.classList.contains("active")) closeMenu();
-    });
   </script>
 </html>
